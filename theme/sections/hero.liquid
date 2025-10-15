@@ -1,0 +1,74 @@
+{% schema %}
+{
+  "name": "Showcase",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Developed by Tradefronts"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Setttings"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image"
+    },
+    {
+      "type": "text",
+      "id": "main_heading",
+      "label": "Main Heading",
+      "default": "This is the main heading"
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Sub Heading",
+      "default": "This is a sub-heading"
+    },
+    {
+      "type": "image_picker",
+      "id": "signature",
+      "label": "Signature"
+    }
+  ]
+}
+{% endschema %}
+<section class="pt-14">
+  <div class="relative flex justify-center items-center">
+    {% if section.settings.hero_image != blank %}
+      <img
+        src="{{ section.settings.hero_image | image_url: height: 1080 }}"
+        height=""
+        width=""
+        class="h-full w-full object-cover hidden lg:inline-block"
+      >
+    {% else %}
+      <img
+        src="{{ 'placeholder.png' | asset_url }}"
+        height=""
+        width=""
+        class="min-h-[600px] h-[800px] w-full hidden lg:inline-block object-cover"
+      >
+    {% endif %}
+
+    <div class="absolute left-0 right-0 flex justify-start text-white px-20">
+      <div class="text-center">
+        <h1 class="playfair lg:text-lg text-2xl font-extralight mb-1 tracking-tight w-80">
+          {{ section.settings.main_heading }}
+        </h1>
+        {% if section.settings.signature != blank %}
+          <div class="w-full flex items-center justify-center">
+            <img
+              src="{{ section.settings.signature | image_url: height: 400 }}"
+              height=""
+              width=""
+              class="h-20 w-auto"
+            >
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

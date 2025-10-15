@@ -1,0 +1,18 @@
+[
+    {
+      "name": "Theme Settings",
+      "settings": [
+        {
+          "type": "text",
+          "id": "shop_name",
+          "label": "Shop Name",
+          "default": "Tradefronts Managed Store"
+        },
+         {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo"
+        },
+      ]
+    }
+  ]

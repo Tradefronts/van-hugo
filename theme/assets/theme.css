@@ -1,0 +1,71 @@
+.playfair {
+    font-family: 'PlayFair';
+}
+
+.playfair-display-400 {
+  font-family: "Playfair Display";
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.satoshi-light {
+    font-family: 'Satoshi-Light';
+    font-weight: 300; /* Optional: Specify weight if needed */
+  }
+  
+  .satoshi-regular {
+    font-family: 'Satoshi-Regular';
+    font-weight: 400; /* Optional: Specify weight if needed */
+  }
+  
+  .satoshi-bold {
+    font-family: 'Satoshi-Bold';
+    font-weight: 700; /* Optional: Specify weight if needed */
+  }
+  
+  .satoshi-medium {
+    font-family: 'Satoshi-Medium';
+    font-weight: 500; /* Optional: Specify weight if needed */
+  }
+  
+  .satoshi-black {
+    font-family: 'Satoshi-Black';
+    font-weight: 900; /* Optional: Specify weight if needed */
+  }
+
+body {
+    overscroll-behavior: none; /* Prevents bounce */
+    /* scroll-behavior: smooth; */
+}
+
+#navbar {
+    transition: background-color 0.3s ease; /* Adjust the duration and easing as needed */
+}
+
+.marquee {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.marquee-content {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Ensures that the duplicate text runs immediately after the first one, so no gaps exist */
+.marquee-content p {
+  padding-right: 100%; /* Adjust padding to ensure smooth flow */
+}
