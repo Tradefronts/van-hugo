@@ -1,19 +1,24 @@
-
 <style>
-  #vd-panel                  { transform: translateY(100%); }
-  #vd-panel.open             { transform: translateY(0); }
+  #vd-panel {
+    transform: translateY(100%);
+  }
+  #vd-panel.open {
+    transform: translateY(0);
+  }
   @media (min-width: 768px) {
-    #vd-panel                { transform: translateX(100%); }
-    #vd-panel.open           { transform: translateX(0); }
+    #vd-panel {
+      transform: translateX(100%);
+    }
+    #vd-panel.open {
+      transform: translateX(0);
+    }
   }
 </style>
-
 <div
   id="vd-overlay"
   onclick="vdOverlayClick(event)"
   class="fixed inset-0 z-[10001] bg-black/0 pointer-events-none transition-colors duration-300"
 ></div>
-
 <div
   id="vd-panel"
   class="
@@ -25,30 +30,27 @@
     md:shadow-[-4px_0_24px_rgba(0,0,0,0.12)]
   "
 >
- <div class="w-full flex items-center justify-between px-5 py-3 border-b border-[#DADADA] flex-shrink-0">
-        <h2 id="cart-title" class="text-sm font-bold uppercase tracking-tight">Select Variations</h2>
-        <button
-          id="cart-close-btn"
-                onclick="closeVariationDrawer()"
-
-        >
-          <img src="{{ 'blackCross-icon.svg' | asset_url }}" width="10" height="12" alt="Account">
-        </button>
-      </div>
-
+  <div class="w-full flex items-center justify-between px-5 py-3 border-b border-[#DADADA] flex-shrink-0">
+    <h2 id="cart-title" class="text-sm font-bold uppercase tracking-tight">Select Variations</h2>
+    <button
+      id="cart-close-btn"
+      onclick="closeVariationDrawer()"
+    >
+      <img src="{{ 'blackCross-icon.svg' | asset_url }}" width="10" height="12" alt="Account">
+    </button>
+  </div>
   <div class="flex-1 overflow-y-auto px-5 py-5 space-y-6">
     <div class="flex gap-2 items-start">
       <div class="pt-3">
-      <img
-        id="vd-image"
-        src=""
-        alt=""
-        class="w-24 h-20 object-contain flex-shrink-0"
-        height=""
-        width=""
-      >
+        <img
+          id="vd-image"
+          src=""
+          alt=""
+          class="w-24 h-20 object-contain flex-shrink-0"
+          height=""
+          width=""
+        >
       </div>
-
       <div class="min-w-0">
         <p id="vd-title" class="font-bold text-lg uppercase leading-tight "></p>
         <p id="vd-type" class="text-sm mt-0.5 uppercase tracking-wide"></p>
@@ -57,20 +59,18 @@
           href="#"
           onclick="event.stopPropagation()"
           class="text-[9px] uppercase  text-gray-400 underline mt-1.5 block"
-        >View Product</a>
+          >View Product</a
+        >
       </div>
     </div>
-
     <div id="vd-pack-section">
       <p class="text-base font-bold uppercase tracking-tighter mb-3">Pack Size</p>
       <div id="vd-pack-options" class="w-full grid grid-cols-3 gap-2"></div>
     </div>
-
-    <div id="vd-grind-section" class=" h-32 bg-red-600">
-      <p class="text-xs font-bold uppercase tracking-widest mb-3">Grind Size</p>
-      <div id="vd-grind-options" class="grid grid-cols-4 gap-2"></div>
+    <div id="vd-grind-section" class="">
+      <p class="text-base font-bold uppercase tracking-tighter mb-3">Grind Size</p>
+      <div id="vd-grind-options" class="grid grid-cols-4 gap-y-4"></div>
     </div>
-
     <div class="flex items-center gap-3 flex-wrap">
       <span id="vd-price" class="text-2xl font-bold tracking-tight"></span>
       <span id="vd-compare" class="text-lg text-[#ABABAB] font-semibold line-through hidden"></span>
@@ -83,17 +83,22 @@
         onclick="vdDecQty()"
         disabled
         class="w-11 h-11 flex items-center justify-center text-lg  bg-white cursor-pointer hover:bg-gray-50 disabled:text-gray-300 disabled:cursor-not-allowed flex-shrink-0"
-      >−</button>
+      >
+        −
+      </button>
       <span
         id="vd-qty-num"
         class="min-w-[3.5rem] h-11 flex items-center justify-center text-sm font-bold select-none flex-shrink-0"
-      >1</span>
+        >1</span
+      >
       <button
         type="button"
         id="vd-inc"
         onclick="vdIncQty()"
         class="w-11 h-11 flex items-center justify-center text-lg  bg-white cursor-pointer hover:bg-gray-50 disabled:text-gray-300 disabled:cursor-not-allowed flex-shrink-0"
-      >+</button>
+      >
+        +
+      </button>
     </div>
   </div>
   <div class="flex-shrink-0 px-5 py-4 border-t border-gray-200">
@@ -105,229 +110,195 @@
       Add to Cart
     </button>
   </div>
-
 </div>
 
 <script>
-(function () {
+  (function () {
+    var _vdVariants = [];
+    var _vdSelectedId = null;
+    var _vdQty = 1;
+    var _vdMaxQty = 9999;
+    var _vdPackIdx = 0;
+    var _vdGrindIdx = -1;
+    var _vdSelectedPack = null;
+    var _vdSelectedGrind = null;
 
-  var _vdVariants   = [];
-  var _vdSelectedId = null;
-  var _vdQty        = 1;
-  var _vdMaxQty     = 9999;
-
-  window.openVariationDrawer = function (productHandle) {
-    _vdQty = 1;
-    _vdSelectedId = null;
-
-    document.getElementById('vd-qty-num').textContent = '1';
-    document.getElementById('vd-dec').disabled = true;
-    document.getElementById('vd-inc').disabled = false;
-
-    var addBtn = document.getElementById('vd-add-btn');
-    addBtn.textContent = 'Add to Cart';
-    addBtn.disabled = false;
-
-    document.getElementById('vd-pack-options').innerHTML = '';
-    document.getElementById('vd-price').textContent = '';
-    document.getElementById('vd-compare').classList.add('hidden');
-    document.getElementById('vd-discount').classList.add('hidden');
-    document.getElementById('vd-image').src = '';
-    document.getElementById('vd-title').textContent = '';
-    document.getElementById('vd-type').textContent = '';
-
-    fetch('/products/' + productHandle + '.js')
-      .then(function (r) { return r.json(); })
-      .then(function (product) {
-
-        _vdVariants = product.variants || [];
-
-        // Image
-        if (product.images && product.images.length > 0) {
-          var imgSrc = product.images[0];
-          if (typeof imgSrc === 'object') imgSrc = imgSrc.src || imgSrc;
-          imgSrc = imgSrc + (imgSrc.indexOf('?') > -1 ? '&width=200' : '?width=200');
-          document.getElementById('vd-image').src = imgSrc;
-        }
-
-        document.getElementById('vd-title').textContent = product.title;
-        document.getElementById('vd-type').textContent  = product.product_type || '';
-        document.getElementById('vd-link').href = '/products/' + product.handle;
-
-        var options = product.options || [];
-        var packIdx = 0;
-
-        options.forEach(function (opt, i) {
-          var name = (typeof opt === 'string' ? opt : (opt.name || '')).toLowerCase();
-          if (name === 'weight' || name === 'size' || name === 'pack size') packIdx = i;
-        });
-
-        var packVals = [];
-        _vdVariants.forEach(function (v) {
-          var val = vdOpt(v, packIdx);
-          if (val && val !== 'Default Title' && packVals.indexOf(val) === -1) {
-            packVals.push(val);
-          }
-        });
-
-        document.getElementById('vd-pack-options').innerHTML =
-          packVals.map(function (val) {
-
-            var avail = _vdVariants.some(function (v) {
-              return vdOpt(v, packIdx) === val && v.available;
-            });
-
-            var base = 'px-4 py-2 border border-black rounded-full text-sm font-bold uppercase tracking-tight cursor-pointer transition bg-white text-black';
-            var disabled = 'opacity-30 cursor-not-allowed line-through';
-
-            return '<button type="button" '
-              + 'class="' + base + (!avail ? ' ' + disabled : '') + '" '
-              + 'data-pack="' + val + '" '
-              + 'onclick="vdSelectPack(this)" '
-              + (!avail ? 'disabled' : '') + '>'
-              + val + '</button>';
-
-          }).join('');
-
-        var first = _vdVariants.find(function (v) { return v.available; }) || _vdVariants[0];
-
-        if (first) {
-          _vdSelectedId = first.id;
-
-          _vdMaxQty = (first.inventory_policy === 'deny' && first.inventory_quantity > 0)
-            ? first.inventory_quantity
-            : 9999;
-
-          vdHighlightPack(vdOpt(first, packIdx));
-          vdUpdatePrice(first);
-          document.getElementById('vd-inc').disabled = (_vdMaxQty <= 1);
-        }
-
-      });
-
-    var overlay = document.getElementById('vd-overlay');
-    overlay.classList.remove('bg-black/0', 'pointer-events-none');
-    overlay.classList.add('bg-black/45', 'pointer-events-auto');
-
-    document.getElementById('vd-panel').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  };
-
-  window.closeVariationDrawer = function () {
-    var overlay = document.getElementById('vd-overlay');
-    overlay.classList.remove('bg-black/45', 'pointer-events-auto');
-    overlay.classList.add('bg-black/0', 'pointer-events-none');
-
-    document.getElementById('vd-panel').classList.remove('open');
-    document.body.style.overflow = '';
-  };
-
-  function vdOpt(variant, idx) {
-    if (idx === 0) return variant.option1;
-    if (idx === 1) return variant.option2;
-    if (idx === 2) return variant.option3;
-    return variant.option1;
-  }
-
-  function vdFindVariant(packVal) {
-    return _vdVariants.find(function (v) {
-      return v.option1 === packVal || v.option2 === packVal || v.option3 === packVal;
-    });
-  }
-
-  function vdHighlightPack(val) {
-    document.querySelectorAll('#vd-pack-options button').forEach(function (b) {
-      var sel = b.getAttribute('data-pack') === val;
-      b.classList.toggle('bg-black', sel);
-      b.classList.toggle('text-white', sel);
-      b.classList.toggle('bg-white', !sel);
-      b.classList.toggle('text-black', !sel);
-    });
-  }
-
-  function vdUpdatePrice(variant) {
-    var price   = Math.round(variant.price / 100);
-    var compare = variant.compare_at_price ? Math.round(variant.compare_at_price / 100) : null;
-
-    document.getElementById('vd-price').textContent = '₹' + price;
-
-    var ce = document.getElementById('vd-compare');
-    var de = document.getElementById('vd-discount');
-
-    if (compare && compare > price) {
-      var pct = Math.round((compare - price) * 100 / compare);
-      ce.textContent = '₹' + compare;
-      de.textContent = pct + '% OFF';
-      ce.classList.remove('hidden');
-      de.classList.remove('hidden');
-    } else {
-      ce.classList.add('hidden');
-      de.classList.add('hidden');
-    }
-  }
-
-  window.vdSelectPack = function (btn) {
-    var val = btn.getAttribute('data-pack');
-
-    vdHighlightPack(val);
-
-    var matched = vdFindVariant(val);
-
-    if (matched) {
-      _vdSelectedId = matched.id;
-
-      _vdMaxQty = (matched.inventory_policy === 'deny' && matched.inventory_quantity > 0)
-        ? matched.inventory_quantity
-        : 9999;
-
+    window.openVariationDrawer = function (productHandle) {
       _vdQty = 1;
+      _vdSelectedId = null;
+
       document.getElementById('vd-qty-num').textContent = '1';
       document.getElementById('vd-dec').disabled = true;
-      document.getElementById('vd-inc').disabled = (_vdMaxQty <= 1);
+      document.getElementById('vd-inc').disabled = false;
+      document.getElementById('vd-pack-options').innerHTML = '';
+      document.getElementById('vd-grind-options').innerHTML = '';
 
+      fetch('/products/' + productHandle + '.js')
+        .then(function (r) {
+          return r.json();
+        })
+        .then(function (product) {
+          if (product.images && product.images.length > 0) {
+            var imgSrc = product.images[0];
+            if (typeof imgSrc === 'object') imgSrc = imgSrc.src || imgSrc;
+            imgSrc = imgSrc + (imgSrc.indexOf('?') > -1 ? '&width=200' : '?width=200');
+            document.getElementById('vd-image').src = imgSrc;
+          }
+          document.getElementById('vd-title').textContent = product.title;
+          document.getElementById('vd-type').textContent = product.product_type || '';
+          document.getElementById('vd-link').href = '/products/' + product.handle;
+          _vdVariants = product.variants || [];
+          var options = product.options || [];
+          options.forEach(function (opt, i) {
+            var name = (typeof opt === 'string' ? opt : opt.name || '').toLowerCase();
+            if (name === 'weight' || name === 'size' || name === 'pack size') _vdPackIdx = i;
+            if (name === 'grind size' || name === 'grind') _vdGrindIdx = i;
+          });
+          renderPackOptions();
+          renderGrindOptions();
+          var first =
+            _vdVariants.find(function (v) {
+              return v.available;
+            }) || _vdVariants[0];
+          if (first) {
+            _vdSelectedPack = vdOpt(first, _vdPackIdx);
+            _vdSelectedGrind = vdOpt(first, _vdGrindIdx);
+            _vdSelectedId = first.id;
+            vdHighlightPack(_vdSelectedPack);
+            vdHighlightGrind(_vdSelectedGrind);
+            vdUpdatePrice(first);
+          }
+        });
+      var overlay = document.getElementById('vd-overlay');
+      overlay.classList.remove('bg-black/0', 'pointer-events-none');
+      overlay.classList.add('bg-black/45', 'pointer-events-auto');
+      document.getElementById('vd-panel').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+    function vdOpt(v, idx) {
+      if (idx == 0) return v.option1;
+      if (idx == 1) return v.option2;
+      if (idx == 2) return v.option3;
+    }
+    function renderPackOptions() {
+      var vals = [];
+      _vdVariants.forEach(function (v) {
+        var val = vdOpt(v, _vdPackIdx);
+        if (vals.indexOf(val) === -1) vals.push(val);
+      });
+      document.getElementById('vd-pack-options').innerHTML = vals
+        .map(function (val) {
+          var base = 'px-4 py-2 border border-black rounded-full text-sm font-bold uppercase cursor-pointer';
+
+          return (
+            '<button type="button" class="' +
+            base +
+            '" data-pack="' +
+            val +
+            '" onclick="vdSelectPack(this)">' +
+            val +
+            '</button>'
+          );
+        })
+        .join('');
+    }
+    function renderGrindOptions() {
+      if (_vdGrindIdx === -1) return;
+      var vals = [];
+      _vdVariants.forEach(function (v) {
+        var val = vdOpt(v, _vdGrindIdx);
+        if (vals.indexOf(val) === -1) vals.push(val);
+      });
+      document.getElementById('vd-grind-options').innerHTML = vals
+        .map(function (val) {
+          var base = 'p-2 text-center rounded uppercase cursor-pointer tracking-tight text-[0.7rem]';
+
+          return (
+            '<button type="button" class="' +
+            base +
+            '" data-grind="' +
+            val +
+            '" onclick="vdSelectGrind(this)">' +
+            val.replace(' ', '<br>') +
+            '</button>'
+          );
+        })
+        .join('');
+    }
+    function findVariant() {
+      return _vdVariants.find(function (v) {
+        return vdOpt(v, _vdPackIdx) === _vdSelectedPack && vdOpt(v, _vdGrindIdx) === _vdSelectedGrind;
+      });
+    }
+    window.vdSelectPack = function (btn) {
+      _vdSelectedPack = btn.getAttribute('data-pack');
+      vdHighlightPack(_vdSelectedPack);
+      updateVariant();
+    };
+    window.vdSelectGrind = function (btn) {
+      _vdSelectedGrind = btn.getAttribute('data-grind');
+      vdHighlightGrind(_vdSelectedGrind);
+      updateVariant();
+    };
+    function updateVariant() {
+      var matched = findVariant();
+      if (!matched) return;
+      _vdSelectedId = matched.id;
       vdUpdatePrice(matched);
     }
-  };
-
-  window.vdDecQty = function () {
-    if (_vdQty <= 1) return;
-    _vdQty--;
-    document.getElementById('vd-qty-num').textContent = _vdQty;
-    document.getElementById('vd-dec').disabled = (_vdQty <= 1);
-    document.getElementById('vd-inc').disabled = (_vdQty >= _vdMaxQty);
-  };
-
-  window.vdIncQty = function () {
-    if (_vdQty >= _vdMaxQty) return;
-    _vdQty++;
-    document.getElementById('vd-qty-num').textContent = _vdQty;
-    document.getElementById('vd-dec').disabled = false;
-    document.getElementById('vd-inc').disabled = (_vdQty >= _vdMaxQty);
-  };
-
-  window.vdAddToCart = function () {
-    if (!_vdSelectedId) return;
-
-    var btn = document.getElementById('vd-add-btn');
-    btn.textContent = 'Adding...';
-    btn.disabled = true;
-
-    fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: _vdSelectedId, quantity: _vdQty })
-    })
-    .then(function () {
-      window.closeVariationDrawer();
-      setTimeout(function () {
-        if (typeof window.openCartDrawer === 'function') window.openCartDrawer();
-      }, 320);
-    })
-    .catch(function () {
-      btn.textContent = 'Add to Cart';
-      btn.disabled = false;
-    });
-  };
-
-}());
+    function vdHighlightPack(val) {
+      document.querySelectorAll('#vd-pack-options button').forEach(function (b) {
+        var sel = b.getAttribute('data-pack') === val;
+        b.classList.toggle('bg-black', sel);
+        b.classList.toggle('text-white', sel);
+      });
+    }
+    function vdHighlightGrind(val) {
+      document.querySelectorAll('#vd-grind-options button').forEach(function (b) {
+        var sel = b.getAttribute('data-grind') === val;
+        if (sel) {
+          b.classList.add('border', 'border-black', 'font-bold');
+        } else {
+          b.classList.remove('border', 'border-black', 'font-bold');
+        }
+      });
+    }
+    function vdUpdatePrice(variant) {
+      var price = Math.round(variant.price / 100);
+      var compare = variant.compare_at_price ? Math.round(variant.compare_at_price / 100) : null;
+      document.getElementById('vd-price').textContent = '₹' + price;
+      var ce = document.getElementById('vd-compare');
+      var de = document.getElementById('vd-discount');
+      if (compare && compare > price) {
+        var pct = Math.round(((compare - price) * 100) / compare);
+        ce.textContent = '₹' + compare;
+        de.textContent = pct + '% OFF';
+        ce.classList.remove('hidden');
+        de.classList.remove('hidden');
+      } else {
+        ce.classList.add('hidden');
+        de.classList.add('hidden');
+      }
+    }
+    window.closeVariationDrawer = function () {
+      var overlay = document.getElementById('vd-overlay');
+      overlay.classList.remove('bg-black/45', 'pointer-events-auto');
+      overlay.classList.add('bg-black/0', 'pointer-events-none');
+      document.getElementById('vd-panel').classList.remove('open');
+      document.body.style.overflow = '';
+    };
+    window.vdAddToCart = function () {
+      if (!_vdSelectedId) return;
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: _vdSelectedId, quantity: _vdQty }),
+      }).then(function () {
+        closeVariationDrawer();
+        setTimeout(function () {
+          if (typeof window.openCartDrawer === 'function') window.openCartDrawer();
+        }, 320);
+      });
+    };
+  })();
 </script>

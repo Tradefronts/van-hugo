@@ -7,7 +7,7 @@
             <img
               src="{{ image | image_url: width:600 }}"
               alt="{{ product.title }} - Image {{ forloop.index }}"
-  class="w-full h-full object-contain md:-translate-x-8 -translate-x-5 "
+              class="w-full h-full object-contain md:-translate-x-8 -translate-x-5 "
               loading="lazy"
               height=""
               width=""
@@ -18,7 +18,13 @@
     </div>
 
     <div class="md:w-5/12 w-full  md:space-y-8 space-y-5">
-      <form id="product-form" method="post" action="/cart/add" enctype="multipart/form-data" class="md:space-y-8 space-y-5">
+      <form
+        id="product-form"
+        method="post"
+        action="/cart/add"
+        enctype="multipart/form-data"
+        class="md:space-y-8 space-y-5"
+      >
         <input type="hidden" name="id" id="variant-id" value="{{ product.selected_or_first_available_variant.id }}">
         <div class="space-y-4">
           <div>
@@ -44,7 +50,9 @@
                         name="options[{{ option.name }}]"
                         value="{{ value }}"
                         class="hidden peer"
-                        {% if option.selected_value == value %}checked{% endif %}
+                        {% if option.selected_value == value %}
+                          checked
+                        {% endif %}
                       >
                       <span class="block w-full text-center md:py-3 py-1.5 md:text-lg text-sm border-2 border-black peer-checked:bg-black peer-checked:text-white transition font-bold">
                         {{ value }}
@@ -56,19 +64,65 @@
             {% endfor %}
           </div>
         {% endunless %}
-        <div class="h-56 bg-slate-500">Grind size</div>
+
+        {% unless product.has_only_default_variant %}
+          <div class="grind-size">
+            <p class="font-bold md:text-lg tracking-tight uppercase">Grind Size</p>
+
+            {% for option in product.options_with_values %}
+              {% if option.name == 'Grind size' %}
+                <div class="grid grid-cols-4 md:gap-3 gap-1 mt-4">
+                  {% for value in option.values %}
+                    <label class="cursor-pointer">
+                      <input
+                        type="radio"
+                        name="options[{{ option.name }}]"
+                        value="{{ value }}"
+                        class="hidden peer"
+                        {% if option.selected_value == value %}
+                          checked
+                        {% endif %}
+                      >
+
+                      <div
+                        class="
+                          flex items-center justify-center
+                          bg-[#F6F4EE] rounded-md py-4 md:px-2 px-3
+                          border-2 border-transparent
+                          font-medium
+                          peer-checked:border-black
+                          peer-checked:font-semibold
+                          transition
+                        "
+                      >
+                        <p class="uppercase md:text-sm text-[0.7rem] text-center">
+                          {{ value }}
+                        </p>
+                      </div>
+                    </label>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endunless %}
+
         <div class="space-y-2">
           {% assign variant = product.selected_or_first_available_variant %}
           <div id="price-wrapper" class="flex items-center gap-3 mb-4">
-            <span class="md:text-3xl text-2xl font-bold tracking-tight">
-              ₹{{ variant.price | divided_by: 100 }}
-            </span>
+            <span class="md:text-3xl text-2xl font-bold tracking-tight"> ₹{{ variant.price | divided_by: 100 }} </span>
             {% if variant.compare_at_price > variant.price %}
               <span class="text-[#ABABAB] md:text-2xl text-lg md:font-bold font-semibold line-through tracking-tight">
                 ₹{{ variant.compare_at_price | divided_by: 100 }}
               </span>
               <span class="text-[#900000] text-lg md:font-bold font-semibold md:text-2xl tracking-tight">
-                {{ variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price }}% OFF
+                {{
+                  variant.compare_at_price
+                  | minus: variant.price
+                  | times: 100
+                  | divided_by: variant.compare_at_price
+                -}}
+                % OFF
               </span>
             {% endif %}
           </div>
@@ -94,7 +148,6 @@
               >
                 Add to cart
               </button>
-
             </div>
             <button
               type="submit"
@@ -109,7 +162,13 @@
           <h3 class="font-bold md:text-lg tracking-tight uppercase mb-2">Shipping</h3>
           <div class="flex items-center justify-between mt-6 border-b-2 border-black pb-3">
             <div class="flex items-center gap-3 w-full">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-8 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-7 h-8 text-gray-700"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
@@ -117,10 +176,12 @@
                 type="text"
                 id="pincodeInput"
                 placeholder="ENTER DELIVERY PINCODE"
-                class="leading-tight w-full outline-none md:text-lg text-sm font-medium placeholder-black"
+                class="leading-tight w-full outline-none md:text-lg text-sm font-medium placeholder-black "
               >
             </div>
-            <button type="button" id="checkBtn" class="text-[#4052BA] font-semibold md:text-lg text-sm ml-4">CHECK</button>
+            <button type="button" id="checkBtn" class="text-[#4052BA] font-semibold md:text-lg text-sm ml-4">
+              CHECK
+            </button>
           </div>
 
           <div class="mt-4 text-sm font-medium hidden" id="deliveryBox">
@@ -134,19 +195,40 @@
 
           <div class="flex items-center justify-between my-8 text-xs hidden" id="timeline">
             <div class="flex flex-col items-center text-center font-semibold tracking-tighter">
-              <img id="iconPurchased" src="{{ 'blackCart-icon.svg' | asset_url }}" width="28" height="" class="opacity-50" alt="">
+              <img
+                id="iconPurchased"
+                src="{{ 'blackCart-icon.svg' | asset_url }}"
+                width="28"
+                height=""
+                class="opacity-50"
+                alt=""
+              >
               <p class="mt-2">PURCHASED</p>
               <span id="purchasedDate"></span>
             </div>
             <div id="line1" class="flex-1 h-[2px] bg-gray-300 mx-2"></div>
             <div class="flex flex-col items-center text-center font-semibold tracking-tighter">
-              <img id="iconShipped" src="{{ 'shipping-icon.svg' | asset_url }}" width="28" height="" class="opacity-50" alt="">
+              <img
+                id="iconShipped"
+                src="{{ 'shipping-icon.svg' | asset_url }}"
+                width="28"
+                height=""
+                class="opacity-50"
+                alt=""
+              >
               <p class="mt-2">SHIPPED</p>
               <span id="shippedDate"></span>
             </div>
             <div id="line2" class="flex-1 h-[2px] bg-gray-300 mx-2"></div>
             <div class="flex flex-col items-center text-center font-semibold tracking-tighter">
-              <img id="iconDelivery" src="{{ 'locationPin-icon.svg' | asset_url }}" width="28" height="" class="opacity-50" alt="">
+              <img
+                id="iconDelivery"
+                src="{{ 'locationPin-icon.svg' | asset_url }}"
+                width="28"
+                height=""
+                class="opacity-50"
+                alt=""
+              >
               <p class="mt-2">DELIVERY</p>
               <span id="deliveredDate"></span>
             </div>
@@ -160,9 +242,9 @@
               class="w-full flex justify-between items-center py-4 tracking-wide transition-all duration-300 font-medium"
             >
               INGREDIENTS
-              <span class="transition-transform duration-300" :class="active === 'ingredients' ? 'rotate-180' : ''">             
-                                <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
-</span>
+              <span class="transition-transform duration-300" :class="active === 'ingredients' ? 'rotate-180' : ''">
+                <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
+              </span>
             </button>
             <div
               x-ref="ingredients"
@@ -170,7 +252,9 @@
               :style="active === 'ingredients' ? 'max-height:' + $refs.ingredients.scrollHeight + 'px; opacity:1; transform:translateY(0)' : 'max-height:0px; opacity:0; transform:translateY(-10px)'"
             >
               <div class="pb-6 flex flex-col gap-3">
-                <p class="uppercase tracking-tight">100% Arabica coffee whole beans. No preservatives and no additives.</p>
+                <p class="uppercase tracking-tight">
+                  100% Arabica coffee whole beans. No preservatives and no additives.
+                </p>
                 <div class="w-full h-36 border"></div>
               </div>
             </div>
@@ -182,9 +266,12 @@
               class="w-full flex justify-between items-center py-4 text-sm transition-all duration-300 font-medium "
             >
               SHIPPING POLICY
-              <span class="transition-transform duration-300 font-medium" :class="active === 'shipping' ? 'rotate-180' : ''">            
-                                 <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
-</span>
+              <span
+                class="transition-transform duration-300 font-medium"
+                :class="active === 'shipping' ? 'rotate-180' : ''"
+              >
+                <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
+              </span>
             </button>
             <div
               x-ref="shipping"
@@ -202,8 +289,7 @@
             >
               RETURN AND REFUND POLICY
               <span class="transition-transform duration-300" :class="active === 'return' ? 'rotate-180' : ''">
-                                             <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
-
+                <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
               </span>
             </button>
             <div
@@ -226,9 +312,9 @@
                     class="w-full flex justify-between items-center py-4 text-sm transition-all duration-300 font-medium"
                   >
                     {{ faq.question }}
-                    <span class="transition-transform duration-300" :class="active === '{{ key }}' ? 'rotate-180' : ''">     
-                             <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
-</span>
+                    <span class="transition-transform duration-300" :class="active === '{{ key }}' ? 'rotate-180' : ''">
+                      <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
+                    </span>
                   </button>
                   <div
                     x-ref="{{ key }}"
@@ -241,7 +327,6 @@
               {% endfor %}
             {% endif %}
           </div>
-
         </div>
       </form>
     </div>
@@ -394,4 +479,3 @@
   "name": "Product"
 }
 {% endschema %}
-
