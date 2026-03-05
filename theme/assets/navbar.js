@@ -2,8 +2,8 @@
 const isHomePage = window.location.pathname === "/";
 const isPasswordPage = window.location.pathname === "/password";
 
-console.log("isHomePage", isHomePage);
-
+// console.log("isHomePage", isHomePage);
+// console.log(window.scrollY,"scroll")
 if (isPasswordPage) {
   navbar.classList.add("hidden"); // Add the black background class
 }
@@ -17,15 +17,15 @@ window.addEventListener("scroll", function () {
   const navbar = document.getElementById("navbar");
   const scrollAmount = 100; // Amount of pixels to scroll before changing color
 
-  // if (isHomePage) {
-  //   if (window.scrollY > scrollAmount) {
-  //     navbar.classList.add("bg-white"); // Add the black background class
-  //     navbar.classList.remove("bg-transparent"); // Remove the transparent class
-  //   } else {
-  //     navbar.classList.remove("bg-white"); // Remove the black background class
-  //     navbar.classList.add("bg-transparent"); // Add the transparent class
-  //   }
-  // }
+  if (isHomePage) {
+    if (window.scrollY > scrollAmount) {
+      navbar.classList.add("bg-white"); // Add the black background class
+      navbar.classList.remove("bg-transparent"); // Remove the transparent class
+    } else {
+      navbar.classList.remove("bg-white"); // Remove the black background class
+      navbar.classList.add("bg-transparent"); // Add the transparent class
+    }
+  }
 });
 
 function toggleMenu() {

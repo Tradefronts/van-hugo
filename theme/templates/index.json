@@ -1,9 +1,22 @@
 {
   "sections": {
-    "hero": {
+    "hero_1": {
       "type": "hero",
+      "settings": {}
+    },
+
+    "marquee_1": {
+      "type": "marquee",
+      "settings": {}
+    },
+    "products_1": {
+      "type": "product-listing",
+      "settings": {}
+    },
+    "image_banner": {
+      "type": "image-banner",
       "settings": {}
     }
   },
-  "order": ["hero"]
+  "order": ["hero_1", "marquee_1", "products_1", "image_banner"]
 }

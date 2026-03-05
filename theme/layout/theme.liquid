@@ -1,11 +1,10 @@
 <!doctype html>
-<html>
+<html class="scroll-smooth">
   <head>
     <title>{{ page_title }}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#000000">
-    {% comment %} <meta name="theme-color" content="#000000" media="(prefers-color-scheme: light)"> {% endcomment %}
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,11 +12,22 @@
     <link href="{{ 'theme.css' | asset_url }}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{{ 'fonts.css' | asset_url }}">
     <link rel="stylesheet" href="{{ 'tailwind.css' | asset_url }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
   </head>
+
   <body class="bg-[#FAFAFC]">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     {% section 'header' %}
-    {{ content_for_layout }}
+
+    <main class="sans-serif mt-12">
+      {{ content_for_layout }}
+    </main>
+
     {% section 'footer' %}
-    <script src="{{ 'navbar.js' | asset_url }}" defer></script>
+
+    {% render 'cart-drawer' %}
+    {% render 'variation-drawer' %}
+
   </body>
 </html>

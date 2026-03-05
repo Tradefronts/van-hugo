@@ -1,30 +1,70 @@
-<footer class="bg-black text-white px-20">
-  <div class="flex py-20 flex-col lg:flex-row">
-    <div class="lg:w-1/4 flex flex-col  lg:pr-20">
-      <a href="{{ routes.root_url }}">
-        <img src="{{ 'vh-footer-logo.png' | asset_url }}" width="120" height="50" alt="Logo">
-      </a>
+<footer class="bg-black text-white">
+  <div class=" px-8 md:pt-24 md:pb-32 py-5">
+    <div class="grid md:grid-cols-5 grid-cols-1 md:items-start items-center justify-center md:justify-start md:gap-0 gap-8">
+      <div class="lg:w-1/5 flex items-start md:items-start  md:justify-start justify-center">
+        <a href="{{ routes.root_url }}">
+          {% if settings.logo != blank %}
+            <img
+              src="{{ settings.logo | image_url: width: 600 }}"
+              alt="{{ shop.name }} logo"
+              class="h-14 w-20 object-cover"
+              width="100"
+              height="100"
+            >
+          {% else %}
+            <h5 class="md:text-lg lg:text-xl font-bold">
+              {{ shop.name | upcase }}
+            </h5>
+          {% endif %}
+        </a>
+      </div>
+
+      <div class="flex flex-col md:items-start items-center md:justify-start justify-center gap-6">
+        <h6 class="uppercase text-sm font-bold">Shop</h6>
+        <ul class="flex flex-col md:items-start items-center md:justify-start justify-center gap-3 uppercase text-xs font-medium">
+          <li><a href="#" class="">Best Sellers</a></li>
+          <li><a href="#" class="">Specialty Coffee</a></li>
+          <li><a href="#" class="">Agglomerated Coffee</a></li>
+          <li><a href="#" class="">Gifting</a></li>
+        </ul>
+      </div>
+
+      <div class="flex flex-col md:items-start items-center md:justify-start justify-center gap-6">
+        <h6 class="uppercase text-sm font-bold">Learn</h6>
+        <ul class="flex flex-col md:items-start items-center md:justify-start justify-center gap-3 uppercase text-xs font-medium">
+          <li><a href="#" class="">About Coffee</a></li>
+          <li><a href="#" class="">Blends</a></li>
+          <li><a href="#" class="">Roastings</a></li>
+        </ul>
+      </div>
+
+      <div class="flex flex-col md:items-start items-center md:justify-start justify-center gap-6">
+        <h6 class="uppercase text-sm font-bold">Company</h6>
+        <ul class="flex flex-col md:items-start items-center md:justify-start justify-center gap-3 uppercase text-xs font-medium">
+          <li><a href="#" class="">About Us</a></li>
+          <li><a href="#" class="">Contact</a></li>
+          <li><a href="#" class="">Guest Support</a></li>
+        </ul>
+      </div>
+
+      <div class="flex flex-col md:items-start items-center md:justify-start justify-center gap-6">
+        <h6 class="uppercase  text-sm font-bold">Legal</h6>
+        <ul class="flex flex-col md:items-start items-center md:justify-start justify-center gap-3 uppercase text-xs font-medium">
+          <li><a href="#" class="">Shipping Policy</a></li>
+          <li><a href="#" class="">Refund and Return Policy</a></li>
+          <li><a href="#" class="">Terms and Conditions</a></li>
+          <li><a href="#" class="">Privacy Policy</a></li>
+        </ul>
+      </div>
     </div>
-    <div class="flex flex-col gap-5 lg:gap-0 lg:flex-row grow justify-between lg:pr-20 mt-20 lg:mt-0">
-      <ul class="grid gap-5 uppercase text-xs lg:text-left text-center">
-        <li>Track order</li>
-        <li>Request a return</li>
-        <li>Contact us</li>
-        <li>About us</li>
-      </ul>
-      <ul class="grid gap-5 uppercase text-xs lg:text-left text-center">
-        <li>Return Policy</li>
-        <li>Shipping Policy</li>
-        <li>Privacy Policy</li>
-        <li>Terms of Service</li>
-      </ul>
-      <ul class="grid gap-5 uppercase text-xs lg:text-left text-center">
-        <li>Guest Assistance</li>
-        <li>Email</li>
-        <li>Call</li>
-        <li>WhatsApp</li>
-      </ul>
+
+    
+  </div>
+  <div class="md:border-t border-[#363636]">
+    <div class=" px-6 pt-4 pb-6 flex flex-col lg:flex-row justify-between items-center gap-2 text-[#444444]">
+      <span class="uppercase text-xs md:order-1 order-2">Powered by Tradefronts</span>
+      <span class="uppercase text-xs font-bold md:font-normal md:order-2 order-1">Gennici Global</span>
+      <span class="uppercase text-xs order-3">All Rights Reserved. 2025.</span>
     </div>
   </div>
-  <div class="uppercase font-extralight tracking-[0.4rem] text-xs scale-75 text-center pb-8">Tradefronts Techologies Private Limited&#169;2025. all rights reserved</div>
 </footer>

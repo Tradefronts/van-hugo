@@ -35,5 +35,7 @@ module.exports = {
     "animate-menu-close",
     "animate-menu-items-on",
     "animate-menu-items-off",
+    // 'border-red-900',
+
   ],
 };

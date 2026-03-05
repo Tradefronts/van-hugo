@@ -1,74 +1,83 @@
-{% schema %}
-{
-  "name": "Showcase",
-  "settings": [
-    {
-      "type": "paragraph",
-      "content": "Developed by Tradefronts"
-    },
-    {
-      "type": "header",
-      "content": "Desktop Setttings"
-    },
-    {
-      "type": "image_picker",
-      "id": "hero_image",
-      "label": "Hero Image"
-    },
-    {
-      "type": "text",
-      "id": "main_heading",
-      "label": "Main Heading",
-      "default": "This is the main heading"
-    },
-    {
-      "type": "text",
-      "id": "sub_heading",
-      "label": "Sub Heading",
-      "default": "This is a sub-heading"
-    },
-    {
-      "type": "image_picker",
-      "id": "signature",
-      "label": "Signature"
-    }
-  ]
-}
-{% endschema %}
-<section class="pt-14">
-  <div class="relative flex justify-center items-center">
-    {% if section.settings.hero_image != blank %}
-      <img
-        src="{{ section.settings.hero_image | image_url: height: 1080 }}"
-        height=""
-        width=""
-        class="h-full w-full object-cover hidden lg:inline-block"
-      >
-    {% else %}
-      <img
-        src="{{ 'placeholder.png' | asset_url }}"
-        height=""
-        width=""
-        class="min-h-[600px] h-[800px] w-full hidden lg:inline-block object-cover"
-      >
-    {% endif %}
+<div>
+  <div class="relative">
+    <div class="h-screen w-full bg-neutral-700 relative">
+      {% if section.settings.background != blank %}
+        <img
+          class="h-full w-full object-cover"
+          height=""
+          width=""
+          src="{{ section.settings.background | image_url: width: 1500 }}"
+          alt="banner_image"
+        >
+      {% else %}
+        <img
+          class="h-full w-full object-cover"
+          src="{{'hero-img.png' | asset_url }}"
+          alt="banner_image"
+          height=""
+          width=""
+        >
+      {% endif %}
+    </div>
 
-    <div class="absolute left-0 right-0 flex justify-start text-white px-20">
-      <div class="text-center">
-        <h1 class="playfair lg:text-lg text-2xl font-extralight mb-1 tracking-tight w-80">
-          {{ section.settings.main_heading }}
-        </h1>
-        {% if section.settings.signature != blank %}
-          <div class="w-full flex items-center justify-center">
-            <img
-              src="{{ section.settings.signature | image_url: height: 400 }}"
-              height=""
-              width=""
-              class="h-20 w-auto"
-            >
-          </div>
-        {% endif %}
-      </div>
+<div class="absolute inset-0 flex flex-col items-center gap-2 text-white {{ section.settings.horizontal_position }}" style="justify-content: center; margin-top: -173px;">  
+      <span class="text-2xl text-center playfair-display-400">{{ section.settings.heading }}</span>
+      <a href="{{ section.settings.button_link }}" class="border text-center text-white text-[8px] px-6 py-2 tracking-widest uppercase font-semibold {{ section.settings.button_radius }}">
+        {{ section.settings.Btn_text }}
+      </a>
     </div>
   </div>
-</section>
+</div>
+
+{% schema %}
+{
+  "name": "Hero Section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Coffee that feels like home."
+    },
+    {
+      "type": "text",
+      "id": "Btn_text",
+      "label": "Button Name",
+      "default": "Explore"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "select",
+      "id": "button_radius",
+      "label": "Border Radius",
+      "options": [
+        { "value": "rounded-none", "label": "None" },
+        { "value": "rounded-md", "label": "Medium" },
+        { "value": "rounded-full", "label": "Full" }
+      ],
+      "default": "rounded-full"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_position",
+      "label": "Content Horizontal Position",
+      "options": [
+        { "value": "items-start text-left pl-10", "label": "Left" },
+        { "value": "items-center text-center", "label": "Center" },
+        { "value": "items-end text-right pr-10", "label": "Right" }
+      ],
+      "default": "items-center text-center"
+    }
+  ],
+  "presets": [{ "name": "Hero Section" }]
+}
+{% endschema %}

@@ -1,5 +1,5 @@
 .playfair {
-    font-family: 'PlayFair';
+  font-family: 'PlayFair';
 }
 
 .playfair-display-400 {
@@ -10,37 +10,51 @@
 }
 
 .satoshi-light {
-    font-family: 'Satoshi-Light';
-    font-weight: 300; /* Optional: Specify weight if needed */
-  }
-  
-  .satoshi-regular {
-    font-family: 'Satoshi-Regular';
-    font-weight: 400; /* Optional: Specify weight if needed */
-  }
-  
-  .satoshi-bold {
-    font-family: 'Satoshi-Bold';
-    font-weight: 700; /* Optional: Specify weight if needed */
-  }
-  
-  .satoshi-medium {
-    font-family: 'Satoshi-Medium';
-    font-weight: 500; /* Optional: Specify weight if needed */
-  }
-  
-  .satoshi-black {
-    font-family: 'Satoshi-Black';
-    font-weight: 900; /* Optional: Specify weight if needed */
-  }
+  font-family: 'Satoshi-Light';
+  font-weight: 300;
+  /* Optional: Specify weight if needed */
+}
+
+.satoshi-regular {
+  font-family: 'Satoshi-Regular';
+  font-weight: 400;
+  /* Optional: Specify weight if needed */
+}
+
+.sans-serif {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+
+}
+
+.satoshi-bold {
+  font-family: 'Satoshi-Bold';
+  font-weight: 700;
+  /* Optional: Specify weight if needed */
+}
+
+.satoshi-medium {
+  font-family: 'Satoshi-Medium';
+  font-weight: 500;
+  /* Optional: Specify weight if needed */
+}
+
+.satoshi-black {
+  font-family: 'Satoshi-Black';
+  font-weight: 900;
+  /* Optional: Specify weight if needed */
+}
 
 body {
-    overscroll-behavior: none; /* Prevents bounce */
-    /* scroll-behavior: smooth; */
+  -ms-scroll-chaining: none;
+  overscroll-behavior: none;
+  /* Prevents bounce */
+  /* scroll-behavior: smooth; */
 }
 
 #navbar {
-    transition: background-color 0.3s ease; /* Adjust the duration and easing as needed */
+  transition: background-color 0.3s ease;
+  /* Adjust the duration and easing as needed */
 }
 
 .marquee {
@@ -53,19 +67,32 @@ body {
 .marquee-content {
   display: inline-block;
   white-space: nowrap;
+  -webkit-animation: marquee 10s linear infinite;
   animation: marquee 10s linear infinite;
+}
+
+@-webkit-keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 @keyframes marquee {
   0% {
     transform: translateX(0);
   }
+
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-33.33%);
   }
 }
 
 /* Ensures that the duplicate text runs immediately after the first one, so no gaps exist */
 .marquee-content p {
-  padding-right: 100%; /* Adjust padding to ensure smooth flow */
+  padding-right: 100%;
+  /* Adjust padding to ensure smooth flow */
 }

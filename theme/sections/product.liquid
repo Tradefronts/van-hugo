@@ -1,0 +1,397 @@
+<div class="min-h-screen md:py-5">
+  <div class="flex md:flex-row flex-col md:gap-14 px-8 ">
+    <div class="md:w-7/12  md:py-0 py-10 w-full md:sticky top-10 md:self-start md:h-dvh md:border-r md:border-b border-[#D7D7D7] flex items-center justify-center">
+      <div id="imageSlider" class="w-2/4 h-3/4  overflow-x-auto snap-x snap-mandatory no-scrollbar">
+        {% for image in product.images %}
+          <div class="w-full h-full">
+            <img
+              src="{{ image | image_url: width:600 }}"
+              alt="{{ product.title }} - Image {{ forloop.index }}"
+  class="w-full h-full object-contain md:-translate-x-8 -translate-x-5 "
+              loading="lazy"
+              height=""
+              width=""
+            >
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="md:w-5/12 w-full  md:space-y-8 space-y-5">
+      <form id="product-form" method="post" action="/cart/add" enctype="multipart/form-data" class="md:space-y-8 space-y-5">
+        <input type="hidden" name="id" id="variant-id" value="{{ product.selected_or_first_available_variant.id }}">
+        <div class="space-y-4">
+          <div>
+            <p class="uppercase md:text-3xl text-lg font-bold tracking-tighter">{{ product.title }}</p>
+            <p class="md:text-lg text-sm font-semibold tracking-tighter">
+              {{ product.metafields.coffee.bean }}
+            </p>
+          </div>
+          <div class="text-[#8D8D8D] font-medium md:text-lg tracking-tight text-[14px] leading-tight">
+            {{ product.description }}
+          </div>
+        </div>
+        {% unless product.has_only_default_variant %}
+          <div class="pack-size">
+            <p class="font-bold md:text-lg tracking-tight uppercase">pack size</p>
+            {% for option in product.options_with_values %}
+              {% if option.name == 'Weight' %}
+                <div class="grid grid-cols-3 gap-3 mt-4">
+                  {% for value in option.values %}
+                    <label class="cursor-pointer w-full">
+                      <input
+                        type="radio"
+                        name="options[{{ option.name }}]"
+                        value="{{ value }}"
+                        class="hidden peer"
+                        {% if option.selected_value == value %}checked{% endif %}
+                      >
+                      <span class="block w-full text-center md:py-3 py-1.5 md:text-lg text-sm border-2 border-black peer-checked:bg-black peer-checked:text-white transition font-bold">
+                        {{ value }}
+                      </span>
+                    </label>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endunless %}
+        <div class="h-56 bg-slate-500">Grind size</div>
+        <div class="space-y-2">
+          {% assign variant = product.selected_or_first_available_variant %}
+          <div id="price-wrapper" class="flex items-center gap-3 mb-4">
+            <span class="md:text-3xl text-2xl font-bold tracking-tight">
+              ₹{{ variant.price | divided_by: 100 }}
+            </span>
+            {% if variant.compare_at_price > variant.price %}
+              <span class="text-[#ABABAB] md:text-2xl text-lg md:font-bold font-semibold line-through tracking-tight">
+                ₹{{ variant.compare_at_price | divided_by: 100 }}
+              </span>
+              <span class="text-[#900000] text-lg md:font-bold font-semibold md:text-2xl tracking-tight">
+                {{ variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price }}% OFF
+              </span>
+            {% endif %}
+          </div>
+          <div class="space-y-2">
+            <div class="grid grid-cols-3 gap-2">
+              <div class="border-2 md:py-3 py-2 border-black flex items-center justify-between">
+                <button type="button" id="decreaseQty" class="md:px-4 px-2 text-lg font-bold">−</button>
+                <input
+                  type="number"
+                  id="qtyInput"
+                  name="quantity"
+                  value="1"
+                  min="1"
+                  class="md:w-10 w-8 text-center outline-none font-semibold bg-transparent"
+                >
+                <button type="button" id="increaseQty" class="md:px-4 px-2 text-lg font-bold">+</button>
+              </div>
+              <button
+                type="button"
+                id="add-to-cart-btn"
+                onclick="handleAddToCart(event)"
+                class="font-medium uppercase border-2 md:py-3 py-2 col-span-2 border-black md:text-base text-sm"
+              >
+                Add to cart
+              </button>
+
+            </div>
+            <button
+              type="submit"
+              name="add"
+              class="w-full md:py-4 py-3 uppercase bg-black text-white md:text-base text-sm"
+            >
+              buy now
+            </button>
+          </div>
+        </div>
+        <div class="">
+          <h3 class="font-bold md:text-lg tracking-tight uppercase mb-2">Shipping</h3>
+          <div class="flex items-center justify-between mt-6 border-b-2 border-black pb-3">
+            <div class="flex items-center gap-3 w-full">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-8 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              <input
+                type="text"
+                id="pincodeInput"
+                placeholder="ENTER DELIVERY PINCODE"
+                class="leading-tight w-full outline-none md:text-lg text-sm font-medium placeholder-black"
+              >
+            </div>
+            <button type="button" id="checkBtn" class="text-[#4052BA] font-semibold md:text-lg text-sm ml-4">CHECK</button>
+          </div>
+
+          <div class="mt-4 text-sm font-medium hidden" id="deliveryBox">
+            <p>
+              <span class="font-medium" id="deliveryDateText">DELIVERY BY - </span>
+              |
+              <span>FREE <span class="line-through text-gray-400">₹120</span></span>
+            </p>
+            <p class="text-gray-500 mt-1 font-medium" id="codText">IF ORDERED BEFORE 6PM TODAY</p>
+          </div>
+
+          <div class="flex items-center justify-between my-8 text-xs hidden" id="timeline">
+            <div class="flex flex-col items-center text-center font-semibold tracking-tighter">
+              <img id="iconPurchased" src="{{ 'blackCart-icon.svg' | asset_url }}" width="28" height="" class="opacity-50" alt="">
+              <p class="mt-2">PURCHASED</p>
+              <span id="purchasedDate"></span>
+            </div>
+            <div id="line1" class="flex-1 h-[2px] bg-gray-300 mx-2"></div>
+            <div class="flex flex-col items-center text-center font-semibold tracking-tighter">
+              <img id="iconShipped" src="{{ 'shipping-icon.svg' | asset_url }}" width="28" height="" class="opacity-50" alt="">
+              <p class="mt-2">SHIPPED</p>
+              <span id="shippedDate"></span>
+            </div>
+            <div id="line2" class="flex-1 h-[2px] bg-gray-300 mx-2"></div>
+            <div class="flex flex-col items-center text-center font-semibold tracking-tighter">
+              <img id="iconDelivery" src="{{ 'locationPin-icon.svg' | asset_url }}" width="28" height="" class="opacity-50" alt="">
+              <p class="mt-2">DELIVERY</p>
+              <span id="deliveredDate"></span>
+            </div>
+          </div>
+        </div>
+        <div class="text-gray-800" x-data="{ active: 'ingredients' }">
+          <div class="border-t border-[#DADADA] text-sm">
+            <button
+              type="button"
+              @click="active = active === 'ingredients' ? null : 'ingredients'"
+              class="w-full flex justify-between items-center py-4 tracking-wide transition-all duration-300 font-medium"
+            >
+              INGREDIENTS
+              <span class="transition-transform duration-300" :class="active === 'ingredients' ? 'rotate-180' : ''">             
+                                <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
+</span>
+            </button>
+            <div
+              x-ref="ingredients"
+              class="overflow-hidden transition-all duration-500 ease-in-out"
+              :style="active === 'ingredients' ? 'max-height:' + $refs.ingredients.scrollHeight + 'px; opacity:1; transform:translateY(0)' : 'max-height:0px; opacity:0; transform:translateY(-10px)'"
+            >
+              <div class="pb-6 flex flex-col gap-3">
+                <p class="uppercase tracking-tight">100% Arabica coffee whole beans. No preservatives and no additives.</p>
+                <div class="w-full h-36 border"></div>
+              </div>
+            </div>
+          </div>
+          <div class="border-t border-[#DADADA]">
+            <button
+              type="button"
+              @click="active = active === 'shipping' ? null : 'shipping'"
+              class="w-full flex justify-between items-center py-4 text-sm transition-all duration-300 font-medium "
+            >
+              SHIPPING POLICY
+              <span class="transition-transform duration-300 font-medium" :class="active === 'shipping' ? 'rotate-180' : ''">            
+                                 <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
+</span>
+            </button>
+            <div
+              x-ref="shipping"
+              class="overflow-hidden transition-all duration-500 ease-in-out"
+              :style="active === 'shipping' ? 'max-height:' + $refs.shipping.scrollHeight + 'px; opacity:1; transform:translateY(0)' : 'max-height:0px; opacity:0; transform:translateY(-10px)'"
+            >
+              <div class="pb-6 pt-2 text-xs text-gray-600 uppercase">{{ shop.shipping_policy.body }}</div>
+            </div>
+          </div>
+          <div class="border-t border-[#DADADA]">
+            <button
+              type="button"
+              @click="active = active === 'return' ? null : 'return'"
+              class="w-full flex justify-between items-center py-4 text-sm transition-all duration-300 font-medium"
+            >
+              RETURN AND REFUND POLICY
+              <span class="transition-transform duration-300" :class="active === 'return' ? 'rotate-180' : ''">
+                                             <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
+
+              </span>
+            </button>
+            <div
+              x-ref="return"
+              class="overflow-hidden transition-all duration-500 ease-in-out"
+              :style="active === 'return' ? 'max-height:' + $refs.return.scrollHeight + 'px; opacity:1; transform:translateY(0)' : 'max-height:0px; opacity:0; transform:translateY(-10px)'"
+            >
+              <div class="pb-6 pt-2 text-xs text-gray-600 uppercase">{{ shop.refund_policy.body }}</div>
+            </div>
+          </div>
+          <div class="border-t border-[#DADADA]">
+            <h3 class="text-lg font-semibold my-4">FAQ</h3>
+            {% if product.metafields.product.faq.value != blank %}
+              {% for faq in product.metafields.product.faq.value %}
+                {% assign key = 'faq_' | append: forloop.index %}
+                <div class="border-t border-[#DADADA]">
+                  <button
+                    type="button"
+                    @click="active = active === '{{ key }}' ? null : '{{ key }}'"
+                    class="w-full flex justify-between items-center py-4 text-sm transition-all duration-300 font-medium"
+                  >
+                    {{ faq.question }}
+                    <span class="transition-transform duration-300" :class="active === '{{ key }}' ? 'rotate-180' : ''">     
+                             <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
+</span>
+                  </button>
+                  <div
+                    x-ref="{{ key }}"
+                    class="overflow-hidden transition-all duration-500 ease-in-out uppercase"
+                    :style="active === '{{ key }}' ? 'max-height:' + $refs['{{ key }}'].scrollHeight + 'px; opacity:1; transform:translateY(0)' : 'max-height:0px; opacity:0; transform:translateY(-10px)'"
+                  >
+                    <div class="pb-6 pt-2 text-xs text-gray-600">{{ faq.answer | metafield_tag }}</div>
+                  </div>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const variants = {{ product.variants | json }};
+    const priceWrapper = document.getElementById("price-wrapper");
+    const variantIdInput = document.getElementById("variant-id");
+    const radios = document.querySelectorAll('input[name^="options"]');
+
+    function getSelectedVariant() {
+      const selectedOptions = [];
+      document.querySelectorAll('input[name^="options"]:checked')
+        .forEach(input => selectedOptions.push(input.value));
+      return variants.find(v =>
+        v.options.every((opt, i) => opt === selectedOptions[i])
+      );
+    }
+
+    radios.forEach(radio => {
+      radio.addEventListener("change", function () {
+        const matched = getSelectedVariant();
+        if (!matched) return;
+        variantIdInput.value = matched.id;
+        let html = `
+          <span class="md:text-3xl text-2xl font-bold tracking-tight">
+            ₹${Math.round(matched.price / 100)}
+          </span>
+        `;
+        if (matched.compare_at_price && matched.compare_at_price > matched.price) {
+          const pct = Math.round(
+            (matched.compare_at_price - matched.price) * 100 / matched.compare_at_price
+          );
+          html += `
+            <span class="text-[#ABABAB] md:text-2xl text-lg md:font-bold font-semibold line-through tracking-tight">
+              ₹${Math.round(matched.compare_at_price / 100)}
+            </span>
+            <span class="text-[#900000] text-lg md:font-bold font-semibold md:text-2xl tracking-tight">
+              ${pct}% OFF
+            </span>
+          `;
+        }
+        priceWrapper.innerHTML = html;
+      });
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const qtyInput = document.getElementById("qtyInput");
+
+    document.getElementById("increaseQty").addEventListener("click", () => {
+      qtyInput.value = parseInt(qtyInput.value) + 1;
+    });
+
+    document.getElementById("decreaseQty").addEventListener("click", () => {
+      if (parseInt(qtyInput.value) > 1) {
+        qtyInput.value = parseInt(qtyInput.value) - 1;
+      }
+    });
+  });
+  document.addEventListener("DOMContentLoaded", function () {
+    const checkBtn = document.getElementById("checkBtn");
+    const pincodeInput = document.getElementById("pincodeInput");
+    if (!checkBtn) return;
+
+    const mapping = {
+      "110001": { days: 7, cod: true },
+      "400001": { days: 3, cod: true },
+      "781005": { days: 5, cod: false },
+      "783380": { days: 1, cod: false }
+    };
+
+    checkBtn.addEventListener("click", function () {
+      const pincode = pincodeInput.value.trim();
+      if (!mapping[pincode]) {
+        alert("Delivery not available in this area.");
+        return;
+      }
+
+      const { days } = mapping[pincode];
+      const today = new Date();
+      const shippedStart = new Date(today); shippedStart.setDate(today.getDate() + 1);
+      const shippedEnd   = new Date(today); shippedEnd.setDate(today.getDate() + days - 1);
+      const deliveryDate = new Date(today); deliveryDate.setDate(today.getDate() + days);
+
+      const shortDate = d => d.toLocaleDateString("en-US", { month: "short", day: "2-digit" }).toUpperCase();
+      const fullDate  = d => d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }).toUpperCase();
+
+      document.getElementById("deliveryDateText").innerText = "DELIVERY BY " + fullDate(deliveryDate);
+      document.getElementById("deliveryBox").classList.remove("hidden");
+      document.getElementById("purchasedDate").innerText  = shortDate(today);
+      document.getElementById("shippedDate").innerText    = shortDate(shippedStart) + " - " + shortDate(shippedEnd);
+      document.getElementById("deliveredDate").innerText  = shortDate(deliveryDate);
+      document.getElementById("timeline").classList.remove("hidden");
+      document.getElementById("iconPurchased").classList.remove("opacity-50");
+      setTimeout(() => {
+        document.getElementById("iconShipped").classList.remove("opacity-50");
+        document.getElementById("line1").classList.replace("bg-gray-300", "bg-blue-500");
+      }, 400);
+      setTimeout(() => {
+        document.getElementById("iconDelivery").classList.remove("opacity-50");
+        document.getElementById("line2").classList.replace("bg-gray-300", "bg-blue-500");
+      }, 800);
+    });
+  });
+  function handleAddToCart(event) {
+    event.preventDefault();
+
+    const variantId = document.getElementById("variant-id").value;
+    const quantity  = parseInt(document.getElementById("qtyInput").value) || 1;
+    const button    = document.getElementById("add-to-cart-btn");
+
+    if (!variantId) {
+      alert("Please select a variant.");
+      return;
+    }
+
+    const originalText = button.innerHTML;
+    button.innerHTML = "Adding...";
+    button.disabled  = true;
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity: quantity })
+    })
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then(() => {
+      openCartDrawer(); 
+    })
+    .catch(error => {
+      console.error('Add to cart failed:', error);
+      alert('Failed to add item to cart. Please try again.');
+    })
+    .finally(() => {
+      button.innerHTML = originalText;
+      button.disabled  = false;
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product"
+}
+{% endschema %}
+

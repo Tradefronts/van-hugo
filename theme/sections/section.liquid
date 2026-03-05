@@ -1,0 +1,278 @@
+<style>
+  #shopify-section-{{ section.id }} .section-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.mobile_columns }}, minmax(0,1fr));
+  }
+  @media (min-width: 720px) {
+    #shopify-section-{{ section.id }} .section-grid {
+      grid-template-columns: repeat({{ section.settings.desktop_columns }}, minmax(0,1fr));
+    }
+  }
+</style>
+
+<div class="md:w-5/6 mx-auto px-4 py-8 md:py-12">
+  <div
+    style="margin-bottom: {{ section.settings.header_margin_bottom }}px;"
+  >
+    <h1
+      style="
+        font-size: {{ section.settings.header_font_size }}px;
+        letter-spacing: {{ section.settings.header_letter_spacing }}px;
+        font-weight: {{ section.settings.header_font_weight }};
+      "
+      class="text-2xl md:text-3xl lg:text-4xl uppercase tracking-widest mb-2 font-semibold"
+    >
+      {{ collection.title }}
+    </h1>
+    {% if collection.description != blank %}
+      <p class="text-gray-600 text-sm md:text-base">{{ collection.description }}</p>
+    {% endif %}
+  </div>
+
+  <form
+    id="FacetFiltersForm"
+    method="get"
+    class="mb-5 flex items-center gap-6"
+    x-data="{ active: null }"
+  >
+    <span class="text-sm font-medium whitespace-nowrap">Filter:</span>
+
+    <div class="flex items-center gap-8">
+      {% for filter in collection.filters %}
+        <div class="relative">
+          <button
+            type="button"
+            @click.stop="
+                  active === {{ forloop.index }}
+              ? active = null
+              : active = {{ forloop.index }}
+            "
+            class="flex items-center gap-2 text-sm px-3 py-1 rounded transition-colors duration-200"
+            :class="
+              active === {{ forloop.index }}
+              ? ' text-black'
+              : ' text-gray-500'
+            "
+          >
+            <span>{{ filter.label }}</span>
+
+            <svg
+              class="w-4 h-4 transition-transform duration-200"
+              :class="{ 'rotate-180': active === {{ forloop.index }} }"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+
+          <div
+            x-show="active === {{ forloop.index }}"
+            x-transition
+            class="absolute left-0 top-full mt-2 bg-white border shadow-lg p-4 w-64 z-50"
+          >
+            {% case filter.type %}
+              {% when 'list' %}
+                <div class="space-y-2 max-h-60 overflow-y-auto">
+                  {% for value in filter.values %}
+                    <label class="flex items-center justify-between text-sm cursor-pointer">
+                      <div class="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="{{ value.param_name }}"
+                          value="{{ value.value }}"
+                          {% if value.active %}
+                            checked
+                          {% endif %}
+                          class="border-gray-400"
+                          onchange="this.form.submit()"
+                        >
+                        <span>{{ value.label }}</span>
+                      </div>
+                      <span class="text-gray-400 text-xs">
+                        {{ value.count }}
+                      </span>
+                    </label>
+                  {% endfor %}
+                </div>
+
+              {% when 'price_range' %}
+                <div class="flex gap-2">
+                  <input
+                    type="number"
+                    name="{{ filter.min_value.param_name }}"
+                    value="{% if filter.min_value.value %}{{ filter.min_value.value | divided_by: 100 }}{% endif %}"
+                    min="0"
+                    placeholder="Min"
+                    class="w-1/2 border p-2 text-sm"
+                    onchange="this.form.submit()"
+                  >
+
+                  <input
+                    type="number"
+                    name="{{ filter.max_value.param_name }}"
+                    value="{% if filter.max_value.value %}{{ filter.max_value.value | divided_by: 100 }}{% endif %}"
+                    min="0"
+                    placeholder="Max"
+                    class="w-1/2 border p-2 text-sm"
+                    onchange="this.form.submit()"
+                  >
+                </div>
+            {% endcase %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </form>
+
+  <div class="section-grid md:gap-5 gap-2 pb-8 ">
+    {% for product in collection.products %}
+      <article class="flex items-start justify-center ">
+        <a href="{{ product.url }}" class="block w-full max-w-sm group md:px-5 px-1">
+          <div class="relative">
+            <div class="absolute top-4 right-4 z-10">
+              <button
+                type="button"
+                aria-label="Add {{ product.title }} to wishlist"
+                class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out p-2 hover:scale-110"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  class="w-5 h-5 text-black"
+                >
+                  <path d="M12 .587l3.668 7.568L24 9.423l-6 5.847 1.417 8.23L12 18.897l-7.417 4.603L6 15.27 0 9.423l8.332-1.268z"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="w-full aspect-[4/5]  overflow-hidden">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width:600 }}"
+                  alt="{{ product.featured_image.alt | default: product.title }}"
+                  class="w-full aspect-[3/4] object-cover transition-transform duration-500 "
+                  loading="lazy"
+                  width="600"
+                  height="800"
+                >
+              {% else %}
+                <div class="w-full h-full flex items-center justify-center text-gray-500">No image available</div>
+              {% endif %}
+            </div>
+            <div class="h-1 w-full bg-black opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </div>
+          <div class="py-4">
+            <div class="space-y-1 flex flex-col items-center justify-center ">
+              <h2 class="text-center uppercase text-xs  font-semibold tracking-wider line-clamp-2">
+                {{ product.title }}
+              </h2>
+              {% if product.description != blank %}
+                <div class="relative w-full p-2 text-gray-800 text-center text-sm">
+                  <p class="line-clamp-1">
+                    {{ product.description | strip_html }}
+                  </p>
+                  <div
+                    class="pointer-events-none w-10 absolute bottom-0 top-0 right-0 h-8 bg-gradient-to-r from-white/40 to-white"
+                  ></div>
+                </div>
+              {% endif %}
+            </div>
+            <div class="text-center text-sm">
+              <span class=" font-semibold">
+                {{ product.price | money }}
+              </span>
+            </div>
+            <div class="mt-4 flex items-center justify-center">
+              <span class="inline-flex items-center gap-1 group/button">
+                <span class="text-sm">View details</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  class="fill-current h-4 w-4 text-neutral-400 transition-transform duration-500 ease-in-out group-hover/button:translate-x-2"
+                  aria-hidden="true"
+                >
+                  <path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+        </a>
+      </article>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection Products",
+  "settings": [
+    {
+      "type": "range",
+      "id": "header_font_size",
+      "label": "Header Font Size",
+      "min": 16,
+      "max": 60,
+      "step": 1,
+      "default": 36,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "header_letter_spacing",
+      "label": "Header Letter Spacing",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "default": 2,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "header_font_weight",
+      "label": "Header Font Weight",
+      "default": "600",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "header_margin_bottom",
+      "label": "Header Margin Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "Mobile Columns",
+      "default": "2",
+      "options": [
+        { "value": "1", "label": "1 Column" },
+        { "value": "2", "label": "2 Columns" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "desktop_columns",
+      "label": "Desktop Columns",
+      "default": "3",
+      "options": [
+        { "value": "2", "label": "2 Columns" },
+        { "value": "3", "label": "3 Columns" },
+        { "value": "4", "label": "4 Columns" }
+      ]
+    }
+  ]
+}
+{% endschema %}

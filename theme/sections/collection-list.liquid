@@ -1,0 +1,176 @@
+<style>
+  #shopify-section-{{ section.id }} .collection-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.mobile_columns }}, minmax(0,1fr));
+  }
+  @media (min-width: 720px) {
+    #shopify-section-{{ section.id }} .collection-grid {
+      grid-template-columns: repeat({{ section.settings.desktop_columns }}, minmax(0,1fr));
+    }
+  }
+</style>
+
+<div class="md:w-5/6 mx-auto py-8 md:py-12 px-4">
+  <header
+    style="margin-bottom: {{ section.settings.header_margin_bottom }}px;"
+    class=" text-center md:text-start"
+  >
+    <h2
+      class="uppercase font-semibold"
+      style="
+        font-size: {{ section.settings.header_size }}px;
+        letter-spacing: {{ section.settings.header_letter_spacing }}px;
+        font-weight: {{ section.settings.header_font_weight }};
+      "
+    >
+      {{ section.settings.header_text }}
+    </h2>
+
+    {% if section.settings.description_text != blank %}
+      <p
+        class=" text-gray-600"
+        style="letter-spacing: {{ section.settings.description_letter_spacing }}px;"
+      >
+        {{ section.settings.description_text }}
+      </p>
+    {% endif %}
+  </header>
+
+  <div class="collection-grid pb-8 md:gap-5 gap-2 ">
+    {% for collection in collections %}
+      <article class="group">
+        <a href="{{ collection.url }}" class="block" aria-label="View {{ collection.title }} collection ">
+          <div class="relative overflow-hidden mb-4">
+            {% if collection.image %}
+              <img
+                src="{{ collection.image | image_url: width: 600 }}"
+                alt="{{ collection.title }}"
+                class="w-full aspect-[3/4] object-cover transition-transform duration-500 ease-in-out"
+                loading="lazy"
+                width="600"
+                height="800"
+              >
+            {% else %}
+              <div class="w-full aspect-[3/4] bg-gray-200 flex items-center justify-center">
+                <span class="text-gray-500 text-xs sm:text-sm uppercase tracking-widest">No image</span>
+              </div>
+            {% endif %}
+
+            <div
+              class="absolute bottom-0 left-0 right-0 h-1 bg-black opacity-0 group-hover:opacity-100 duration-300 ease-in-out origin-left"
+            ></div>
+          </div>
+
+          <div class="text-center space-y-1">
+            <h3 class="text-xs sm:text-sm md:text-base tracking-widest font-semibold uppercase transition-colors duration-300 group-hover:text-gray-600">
+              {{ collection.title }}
+            </h3>
+            <p class="text-[10px] sm:text-xs text-gray-600 tracking-widest">
+              {{ collection.products_count }}
+              {% if collection.products_count == 1 %}Product{% else %}Products{% endif %}
+            </p>
+          </div>
+        </a>
+      </article>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collections Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "header_text",
+      "label": "Header Text",
+      "default": "Collections"
+    },
+    {
+      "type": "select",
+      "id": "header_font_weight",
+      "label": "Header Font Weight",
+      "default": "600",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "header_margin_bottom",
+      "label": "Header Margin Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "header_size",
+      "label": "Header Font Size",
+      "min": 14,
+      "max": 60,
+      "step": 1,
+      "default": 32,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "header_letter_spacing",
+      "label": "Header Letter Spacing",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "default": 2
+    },
+
+    {
+      "type": "textarea",
+      "id": "description_text",
+      "label": "Description Text",
+      "default": "Explore our curated collections."
+    },
+    {
+      "type": "range",
+      "id": "description_letter_spacing",
+      "label": "Description Letter Spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "default": 1,
+      "unit": "px"
+    },
+
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "Mobile Columns",
+      "default": "2",
+      "options": [
+        { "value": "1", "label": "1 Column" },
+        { "value": "2", "label": "2 Columns" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "desktop_columns",
+      "label": "Desktop Columns",
+      "default": "3",
+      "options": [
+        { "value": "2", "label": "2 Columns" },
+        { "value": "3", "label": "3 Columns" },
+        { "value": "4", "label": "4 Columns" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collections"
+    }
+  ]
+}
+{% endschema %}
