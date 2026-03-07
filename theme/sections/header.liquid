@@ -1,128 +1,9 @@
-{% comment %} <nav class="fixed top-0 left-0 w-full z-50 bg-[#2A2A2A] text-white border-b border-gray-500">
-  <div class="relative flex items-center justify-between  px-8 h-12">
-    <button id="mobileMenuBtn" class="md:hidden">
-      <img src="{{ 'hamburger-icon.svg' | asset_url }}" width="14" height="14" alt="Account">
-    </button>
-
-    <ul class="hidden md:flex gap-14 text-xs font-bold uppercase">
-      {% if section.settings.main_menu != blank %}
-        {% for link in section.settings.main_menu.links %}
-          <li>
-            <a href="{{ link.url }}" class="hover:opacity-70 transition">
-              {{ link.title }}
-            </a>
-          </li>
-        {% endfor %}
-      {% endif %}
-    </ul>
-
-    <div class="absolute left-0 right-0 flex justify-center pointer-events-none">
-      <a href="{{ routes.root_url }}" class="pointer-events-auto">
-        {% if settings.logo != blank %}
-          <img
-            src="{{ settings.logo | image_url: width: 300 }}"
-            alt="{{ shop.name }}"
-            class="h-8 md:h-10 w-auto"
-            width=""
-            height=""
-          >
-        {% else %}
-          <span class="md:text-base text-sm font-bold uppercase ">
-            {{ shop.name }}
-          </span>
-        {% endif %}
-      </a>
-    </div>
-
-    <div class="flex items-center gap-6">
-      <a href="{{ routes.account_url }}" class="hidden md:block">
-        <img src="{{ 'account-icon.svg' | asset_url }}" width="14" height="14" alt="Account">
-      </a>
-
-      <a href="{{ routes.cart_url }}" class="relative">
-        <img src="{{ 'cart-icon.svg' | asset_url }}" width="16" height="16" alt="Cart">
-        {% if cart.item_count > 0 %}
-          <span class="absolute -top-2 -right-2 text-xs bg-white text-black rounded-full px-1 min-w-[18px] text-center">
-            {{ cart.item_count }}
-          </span>
-        {% endif %}
-      </a>
-    </div>
-  </div>
-</nav>
-
-<div
-  id="mobileMenu"
-  class="fixed top-0 left-0 w-full h-screen flex flex-col bg-[#2A2A2A] text-white transform -translate-x-full transition-transform duration-300 z-[60] md:hidden"
->
-  <div class="flex justify-end px-6 pt-3">
-    <button id="closeMobileMenu">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"/>
-      </svg>
-    </button>
-  </div>
-
-  {% comment %} <div class="flex flex-col items-center gap-8 mt-10 text-lg uppercase font-semibold">
-    <a href="{{ routes.root_url }}">Home</a>
-
-    <a href="/collections/all">Shop</a>
-
-    <a href="/pages/support">Support</a>
-
-    <a href="{{ routes.account_url }}" class=""> Account </a>
-  </div> {% endcomment %}
-
-<ul class="flex-1 md:hidden flex flex-col gap-5 items-center justify-center text-xs font-bold uppercase">
-      {% if section.settings.main_menu != blank %}
-        {% for link in section.settings.main_menu.links %}
-          <li>
-            <a href="{{ link.url }}" class="hover:opacity-70 transition">
-              {{ link.title }}
-            </a>
-          </li>
-        {% endfor %}
-      {% endif %}
-    </ul>
-
-</div>
-
-<script>
-  const mobileBtn = document.getElementById('mobileMenuBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const closeMobileMenu = document.getElementById('closeMobileMenu');
-  mobileBtn.addEventListener('click', () => {
-    mobileMenu.classList.remove('-translate-x-full');
-  });
-  closeMobileMenu.addEventListener('click', () => {
-    mobileMenu.classList.add('-translate-x-full');
-  });
-</script>
-
-{% schema %}
-{
-  "name": "Header",
-  "settings": [
-    {
-      "type": "link_list",
-      "id": "main_menu",
-      "label": "Main Menu",
-      "default": "main-menu"
-    }
-  ]
-}
-{% endschema %} {% endcomment %}
-
-
-
 <nav class="fixed top-0 left-0 w-full z-50 bg-[#2A2A2A] text-white border-b border-gray-500">
   <div class="relative flex items-center justify-between px-8 h-12">
-    <button id="mobileMenuBtn" class="md:hidden">
+    <button id="mobileMenuBtn" class="lg:hidden">
       <img src="{{ 'hamburger-icon.svg' | asset_url }}" width="14" height="14" alt="Menu">
     </button>
-
-    <ul class="hidden md:flex gap-14 text-xs font-bold uppercase">
+    <ul class="hidden lg:flex gap-14 text-xs font-bold uppercase">
       {% if section.settings.main_menu != blank %}
         {% for link in section.settings.main_menu.links %}
           <li>
@@ -133,14 +14,13 @@
         {% endfor %}
       {% endif %}
     </ul>
-
     <div class="absolute left-0 right-0 flex justify-center pointer-events-none">
       <a href="{{ routes.root_url }}" class="pointer-events-auto">
         {% if settings.logo != blank %}
           <img
             src="{{ settings.logo | image_url: width: 300 }}"
             alt="{{ shop.name }}"
-            class="h-8 md:h-10 w-auto"
+            class="h-8 lg:h-10 w-auto"
             width=""
             height=""
           >
@@ -151,13 +31,10 @@
         {% endif %}
       </a>
     </div>
-
     <div class="flex items-center gap-6">
-      <a href="{{ routes.account_url }}" class="hidden md:block">
+      <a href="{{ routes.account_url }}" class="hidden lg:block">
         <img src="{{ 'account-icon.svg' | asset_url }}" width="14" height="14" alt="Account">
       </a>
-
-      <!-- Cart button: opens drawer instead of navigating -->
       <button onclick="openCartDrawer()" class="relative" aria-label="Open cart">
         <img src="{{ 'cart-icon.svg' | asset_url }}" width="16" height="16" alt="Cart">
         <span
@@ -170,8 +47,6 @@
     </div>
   </div>
 </nav>
-
-<!-- Mobile Menu -->
 <div
   id="mobileMenu"
   class="fixed top-0 left-0 w-full h-screen flex flex-col bg-[#2A2A2A] text-white transform -translate-x-full transition-transform duration-300 z-[60] md:hidden"
@@ -183,8 +58,7 @@
       </svg>
     </button>
   </div>
-
-  <ul class="flex-1 md:hidden flex flex-col gap-5 items-center justify-center text-xs font-bold uppercase">
+  <ul class="flex-1 lg:hidden flex flex-col gap-5 items-center justify-center text-xs font-bold uppercase">
     {% if section.settings.main_menu != blank %}
       {% for link in section.settings.main_menu.links %}
         <li>
@@ -198,15 +72,12 @@
 </div>
 
 <script>
-  // Mobile menu
   document.getElementById('mobileMenuBtn').addEventListener('click', () => {
     document.getElementById('mobileMenu').classList.remove('-translate-x-full');
   });
   document.getElementById('closeMobileMenu').addEventListener('click', () => {
     document.getElementById('mobileMenu').classList.add('-translate-x-full');
   });
-
-  // Keep cart badge in sync after drawer updates
   function updateCartBadge() {
     fetch('/cart.js')
       .then(r => r.json())
@@ -222,7 +93,6 @@
       });
   }
 </script>
-
 {% schema %}
 {
   "name": "Header",

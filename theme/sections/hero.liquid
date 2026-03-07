@@ -1,32 +1,38 @@
-<div>
-  <div class="relative">
-    <div class="h-screen w-full bg-neutral-700 relative">
-      {% if section.settings.background != blank %}
-        <img
-          class="h-full w-full object-cover"
-          height=""
-          width=""
-          src="{{ section.settings.background | image_url: width: 1500 }}"
-          alt="banner_image"
-        >
-      {% else %}
-        <img
-          class="h-full w-full object-cover"
-          src="{{'hero-img.png' | asset_url }}"
-          alt="banner_image"
-          height=""
-          width=""
-        >
-      {% endif %}
-    </div>
+<div class="relative h-[120vh] w-full">
 
-<div class="absolute inset-0 flex flex-col items-center gap-2 text-white {{ section.settings.horizontal_position }}" style="justify-content: center; margin-top: -173px;">  
-      <span class="text-2xl text-center playfair-display-400">{{ section.settings.heading }}</span>
-      <a href="{{ section.settings.button_link }}" class="border text-center text-white text-[8px] px-6 py-2 tracking-widest uppercase font-semibold {{ section.settings.button_radius }}">
-        {{ section.settings.Btn_text }}
-      </a>
-    </div>
+  {% if section.settings.background != blank %}
+    <img
+      src="{{ section.settings.background | image_url: width: 1500 }}"
+      class="w-full h-full object-cover"
+      alt="Hero Image"
+      height=""
+      width=""
+    >
+  {% else %}
+    <img
+      src="{{ 'hero-img.png' | asset_url }}"
+      class="w-full h-full object-cover"
+      alt="Hero Image"
+      width=""
+      height=""
+    >
+  {% endif %}
+
+  <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center md:gap-2 gap-3 md:px-6 px-20 md:-translate-y-20 -translate-y-28">
+
+    <h1 class="text-4xl md:text-3xl playfair-display-100 tracking-tight font-extralight">
+      {{ section.settings.heading }}
+    </h1>
+
+    <a
+      href="{{ section.settings.button_link }}"
+      class="border px-5 py-1.5 text-[0.5rem] uppercase {{ section.settings.button_radius }}"
+    >
+      {{ section.settings.Btn_text }}
+    </a>
+
   </div>
+
 </div>
 
 {% schema %}
@@ -65,19 +71,10 @@
         { "value": "rounded-full", "label": "Full" }
       ],
       "default": "rounded-full"
-    },
-    {
-      "type": "select",
-      "id": "horizontal_position",
-      "label": "Content Horizontal Position",
-      "options": [
-        { "value": "items-start text-left pl-10", "label": "Left" },
-        { "value": "items-center text-center", "label": "Center" },
-        { "value": "items-end text-right pr-10", "label": "Right" }
-      ],
-      "default": "items-center text-center"
     }
   ],
-  "presets": [{ "name": "Hero Section" }]
+  "presets": [
+    { "name": "Hero Section" }
+  ]
 }
 {% endschema %}

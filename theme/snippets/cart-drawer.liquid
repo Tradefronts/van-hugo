@@ -1,4 +1,4 @@
-<div id="cart-drawer" class="fixed inset-x-0 bottom-0 top-12 z-[9999] hidden ">
+<div id="cart-drawer" class="fixed inset-x-0 bottom-0 top-12 z-[9999] hidden font-inter">
   <div id="cart-overlay-bg" class="absolute inset-0" style="background:rgba(0,0,0,0.4);"></div>
   <div
     id="cart-drawer-panel"
@@ -14,8 +14,8 @@
           You May Also Like
         </h2>
       </div>
-      <div id="rec-desktop" class="flex-1 overflow-y-auto no-scrollbar">
-        <div class="px-5 py-6 text-sm text-gray-400">Loading...</div>
+      <div id="rec-desktop" class="flex-1 overflow-y-auto no-scrollbar relative">
+        <div class="absolute inset-0 flex items-center justify-center text-sm text-gray-400">Loading...</div>
       </div>
     </div>
     <div class="w-full flex flex-col flex-1  overflow-hidden bg-white ">
@@ -28,15 +28,17 @@
         </button>
       </div>
       <div class="flex-1 overflow-y-auto no-scrollbar">
-        <div id="cart-items" style="padding:1rem 1.25rem;">
-          <div style="text-align:center;padding:3rem 0;color:#9ca3af;font-size:0.875rem;">Your cart is empty</div>
+        <div id="cart-items" class="h-full flex flex-col relative" style="padding:1rem 1.25rem;">
+          <div class="absolute inset-0 flex items-center justify-center w-full text-gray-400 text-sm text-center">
+            Your cart is empty
+          </div>
         </div>
         <div class="md:hidden" style="padding:1.25rem 1rem 1rem;">
           <p style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;text-align:center;color:#6b7280;margin-bottom:1rem;">
             You May Also Like
           </p>
-          <div id="rec-mobile" style="display:grid;grid-template-columns:1fr 1fr;">
-            <p style="grid-column:span 2;font-size:0.75rem;color:#9ca3af;text-align:center;">Loading...</p>
+          <div id="rec-mobile" class="relative grid grid-cols-2">
+            <p class="absolute inset-0 flex items-center justify-center text-xs text-gray-400">Loading...</p>
           </div>
         </div>
       </div>
@@ -47,25 +49,16 @@
         </div>
         <a
           href="/checkout"
-          style="display:flex;align-items:center;justify-content:space-between;width:100%;background:#000;color:#fff;padding:0.875rem 1.25rem;text-decoration:none;font-weight:700;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.1em;"
+          class="flex items-center justify-between w-full text-xs bg-black text-white rounded-lg py-3 px-7 font-semibold uppercase"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            style="width:1rem;height:1rem;opacity:0.6;flex-shrink:0;"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-          </svg>
-          <span style="flex:1;text-align:center;">CHECKOUT &nbsp;·&nbsp; <span id="checkout-price">₹0</span></span>
+          <img src="{{ 'lock-icon.svg' | asset_url }}" width="14" height="14" alt="Account">
+          <span style="flex:1;text-align:center">CHECKOUT • <span id="checkout-price">₹0</span></span>
           <span style="width:1rem;"></span>
         </a>
       </div>
     </div>
   </div>
 </div>
-
 <div
   id="cart-toast"
   style="
@@ -85,7 +78,6 @@
     white-space:nowrap;
   "
 ></div>
-
 <script>
   (function () {
     var _cartUpdating = false;
@@ -160,7 +152,7 @@
 
       if (!cart.items || cart.items.length === 0) {
         document.getElementById('cart-items').innerHTML =
-          '<div class="text-center py-12 text-gray-400 text-sm">Your cart is empty</div>';
+          '<div class="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">Your cart is empty</div>';
         document.getElementById('checkout-price').textContent = '₹0';
         return;
       }
@@ -369,18 +361,14 @@
     }
 
     function buildCard(p, mode) {
-      var price = Number(p.variants[0].price).toFixed(2);
+      var price = Math.round(p.variants[0].price / 100);
       var oldPrice = p.variants[0].compare_at_price ? Number(p.variants[0].compare_at_price).toFixed(2) : null;
-
       var img = 'https://via.placeholder.com/400';
-
       if (p.images && p.images.length > 0) {
         var src = p.images[0].src || p.images[0];
         img = src;
       }
-
       var priceHtml = '<span class="text-xs font-medium">₹' + price + '</span>';
-
       var addBtn =
         '<button type="button" onclick="openVariationDrawer(\'' +
         p.handle +
@@ -388,11 +376,9 @@
         'class="absolute bottom-0 right-0 w-8 h-8 bg-black text-white flex items-center justify-center text-lg hover:bg-gray-800 transition">' +
         '+' +
         '</button>';
-
       var bean = '';
-
       return (
-        '<div class="relative pb-4 flex flex-col border border-[#DADADA] bg-white overflow-hidden">' +
+        '<div class="relative pb-4 flex flex-col border-b border-[#DADADA] bg-white overflow-hidden">' +
         '<div class="pt-10 flex items-center justify-center">' +
         '<img src="' +
         img +

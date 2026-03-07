@@ -1,331 +1,341 @@
-<div class="min-h-screen md:py-5">
-  <div class="flex md:flex-row flex-col md:gap-14 px-8 ">
-    <div class="md:w-7/12  md:py-0 py-10 w-full md:sticky top-10 md:self-start md:h-dvh md:border-r md:border-b border-[#D7D7D7] flex items-center justify-center">
-      <div id="imageSlider" class="w-2/4 h-3/4  overflow-x-auto snap-x snap-mandatory no-scrollbar">
+<div class="min-h-screen ">
+  <div class="flex md:flex-row flex-col xl:gap-10 md:gap-7 gap-0 px-8 ">
+    <div class="xl:w-7/12 md:w-1/2 w-full xl:py-0 md:py-16 py-5 md:sticky top-10 md:self-start xl:min-h-dvh md:border-r md:border-b border-[#D7D7D7] flex md:items-center items-start md:justify-center">
+      <div
+        id="imageSlider"
+        class="w-full h-full overflow-x-auto snap-x snap-mandatory no-scrollbar flex"
+        style="max-height: clamp(300px, 60vw, 80vh);"
+      >
         {% for image in product.images %}
-          <div class="w-full h-full">
+          <div class="w-full flex-shrink-0 flex items-center justify-center px-4 md:px-6 xl:px-10">
             <img
-              src="{{ image | image_url: width:600 }}"
-              alt="{{ product.title }} - Image {{ forloop.index }}"
-              class="w-full h-full object-contain md:-translate-x-8 -translate-x-5 "
+              src="{{ image | image_url: width: 800 }}"
+              alt="{{ product.title }}"
+              class="w-full h-full object-contain max-h-[clamp(280px,55vw,75vh)] lg:-translate-x-8 -translate-x-5"
               loading="lazy"
-              height=""
-              width=""
+              width="800"
+              height="800"
             >
           </div>
         {% endfor %}
       </div>
     </div>
 
-    <div class="md:w-5/12 w-full  md:space-y-8 space-y-5">
+    <div class="xl:w-5/12 md:w-1/2 w-full lg:space-y-8 space-y-5 font-inter xl:pr-12 md:pt-5 lg:pt-0  ">
       <form
         id="product-form"
         method="post"
         action="/cart/add"
         enctype="multipart/form-data"
-        class="md:space-y-8 space-y-5"
+        class="lg:space-y-8 space-y-5 "
       >
         <input type="hidden" name="id" id="variant-id" value="{{ product.selected_or_first_available_variant.id }}">
         <div class="space-y-4">
-          <div>
-            <p class="uppercase md:text-3xl text-lg font-bold tracking-tighter">{{ product.title }}</p>
-            <p class="md:text-lg text-sm font-semibold tracking-tighter">
+          <div class="">
+            <span class="block uppercase md:text-3xl text-lg font-semibold tracking-tighter">{{ product.title }}</span>
+            <span class="block md:text-lg text-sm font-semibold tracking-tighter md:-mt-1.5 -mt-1">
               {{ product.metafields.coffee.bean }}
-            </p>
+            </span>
           </div>
-          <div class="text-[#8D8D8D] font-medium md:text-lg tracking-tight text-[14px] leading-tight">
-            {{ product.description }}
+          <div class="text-[#8D8D8D] font-medium md:text-lg tracking-tighter text-xs" style="line-height: 1.2;">
+            {{ product.description | replace: '<p>', '<p style="margin-bottom: 0.60rem;">' }}
           </div>
         </div>
-        {% unless product.has_only_default_variant %}
-          <div class="pack-size">
-            <p class="font-bold md:text-lg tracking-tight uppercase">pack size</p>
-            {% for option in product.options_with_values %}
-              {% if option.name == 'Weight' %}
-                <div class="grid grid-cols-3 gap-3 mt-4">
-                  {% for value in option.values %}
-                    <label class="cursor-pointer w-full">
-                      <input
-                        type="radio"
-                        name="options[{{ option.name }}]"
-                        value="{{ value }}"
-                        class="hidden peer"
-                        {% if option.selected_value == value %}
-                          checked
-                        {% endif %}
-                      >
-                      <span class="block w-full text-center md:py-3 py-1.5 md:text-lg text-sm border-2 border-black peer-checked:bg-black peer-checked:text-white transition font-bold">
-                        {{ value }}
-                      </span>
-                    </label>
-                  {% endfor %}
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        {% endunless %}
 
-        {% unless product.has_only_default_variant %}
-          <div class="grind-size">
-            <p class="font-bold md:text-lg tracking-tight uppercase">Grind Size</p>
-
-            {% for option in product.options_with_values %}
-              {% if option.name == 'Grind size' %}
-                <div class="grid grid-cols-4 md:gap-3 gap-1 mt-4">
-                  {% for value in option.values %}
-                    <label class="cursor-pointer">
-                      <input
-                        type="radio"
-                        name="options[{{ option.name }}]"
-                        value="{{ value }}"
-                        class="hidden peer"
-                        {% if option.selected_value == value %}
-                          checked
-                        {% endif %}
-                      >
-
-                      <div
-                        class="
-                          flex items-center justify-center
-                          bg-[#F6F4EE] rounded-md py-4 md:px-2 px-3
-                          border-2 border-transparent
-                          font-medium
-                          peer-checked:border-black
-                          peer-checked:font-semibold
-                          transition
-                        "
-                      >
-                        <p class="uppercase md:text-sm text-[0.7rem] text-center">
+        <div class="xl:mr-14 md:mr-0 sm:mr-20 md:space-y-8 space-y-5">
+          {% unless product.has_only_default_variant %}
+            <div class="pack-size">
+              <p class="font-bold md:text-lg text-sm tracking-tight uppercase">pack size</p>
+              {% for option in product.options_with_values %}
+                {% if option.name == 'Weight' %}
+                  <div class="grid grid-cols-3 md:gap-3 gap-2 mt-4">
+                    {% for value in option.values %}
+                      <label class="cursor-pointer w-full">
+                        <input
+                          type="radio"
+                          name="options[{{ option.name }}]"
+                          value="{{ value }}"
+                          class="hidden peer"
+                          {% if option.selected_value == value %}
+                            checked
+                          {% endif %}
+                        >
+                        <span class="tracking-tighter block w-full text-center md:py-3 py-1.5 md:text-lg text-sm md:border-2 border border-black peer-checked:bg-black peer-checked:text-white transition font-bold">
                           {{ value }}
-                        </p>
-                      </div>
-                    </label>
-                  {% endfor %}
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        {% endunless %}
+                        </span>
+                      </label>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endunless %}
 
-        <div class="space-y-2">
-          {% assign variant = product.selected_or_first_available_variant %}
-          <div id="price-wrapper" class="flex items-center gap-3 mb-4">
-            <span class="md:text-3xl text-2xl font-bold tracking-tight"> ₹{{ variant.price | divided_by: 100 }} </span>
-            {% if variant.compare_at_price > variant.price %}
-              <span class="text-[#ABABAB] md:text-2xl text-lg md:font-bold font-semibold line-through tracking-tight">
-                ₹{{ variant.compare_at_price | divided_by: 100 }}
-              </span>
-              <span class="text-[#900000] text-lg md:font-bold font-semibold md:text-2xl tracking-tight">
-                {{
-                  variant.compare_at_price
-                  | minus: variant.price
-                  | times: 100
-                  | divided_by: variant.compare_at_price
-                -}}
-                % OFF
-              </span>
-            {% endif %}
-          </div>
+          {% unless product.has_only_default_variant %}
+            <div class="grind-size">
+              <p class="font-bold md:text-lg text-sm tracking-tight uppercase">Grind Size</p>
+
+              {% for option in product.options_with_values %}
+                {% if option.name == 'Grind size' %}
+                  <div class="grid lg:grid-cols-4 sm:grid-cols-3 grid-cols-4 md:gap-3 gap-1 mt-4">
+                    {% for value in option.values %}
+                      <label class="cursor-pointer">
+                        <input
+                          type="radio"
+                          name="options[{{ option.name }}]"
+                          value="{{ value }}"
+                          class="hidden peer"
+                          {% if option.selected_value == value %}
+                            checked
+                          {% endif %}
+                        >
+                        <div class="flex items-center justify-center rounded-md border-2 border-transparent font-medium peer-checked:border-black peer-checked:font-semibold transition md:h-20 h-12">
+                          <p class="uppercase md:text-sm text-[0.6rem] text-center leading-tight">
+                            {% assign words = value | split: ' ' %}
+                            {% for word in words %}
+                              {{ word -}}
+                              <br>
+                            {% endfor %}
+                          </p>
+                        </div>
+                      </label>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endunless %}
           <div class="space-y-2">
-            <div class="grid grid-cols-3 gap-2">
-              <div class="border-2 md:py-3 py-2 border-black flex items-center justify-between">
-                <button type="button" id="decreaseQty" class="md:px-4 px-2 text-lg font-bold">−</button>
-                <input
-                  type="number"
-                  id="qtyInput"
-                  name="quantity"
-                  value="1"
-                  min="1"
-                  class="md:w-10 w-8 text-center outline-none font-semibold bg-transparent"
+            {% assign variant = product.selected_or_first_available_variant %}
+            <div id="price-wrapper" class="flex items-center gap-3 mb-4">
+              <span class="md:text-3xl text-2xl font-bold  tracking-tighter">
+                ₹{{ variant.price | divided_by: 100 }}
+              </span>
+              {% if variant.compare_at_price > variant.price %}
+                <span class="text-[#ABABAB] md:text-2xl text-lg md:font-bold font-semibold line-through tracking-tighter">
+                  ₹{{ variant.compare_at_price | divided_by: 100 }}
+                </span>
+                <span class="text-[#900000] text-lg md:font-bold font-semibold md:text-2xl tracking-tighter">
+                  {{
+                    variant.compare_at_price
+                    | minus: variant.price
+                    | times: 100
+                    | divided_by: variant.compare_at_price
+                  -}}
+                  % OFF
+                </span>
+              {% endif %}
+            </div>
+            <div class="space-y-2">
+              <div class="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-3 gap-2">
+                <div class="border-2 md:py-3 py-1.5 border-black flex items-center justify-between ">
+                  <button type="button" id="decreaseQty" class="md:px-4 px-2 text-lg font-bold">−</button>
+                  <input
+                    type="number"
+                    id="qtyInput"
+                    name="quantity"
+                    value="1"
+                    min="1"
+                    class="md:w-10 w-8 text-center outline-none font-semibold bg-transparent"
+                  >
+                  <button type="button" id="increaseQty" class="md:px-4 px-2 text-lg font-bold">+</button>
+                </div>
+                <button
+                  type="button"
+                  id="add-to-cart-btn"
+                  onclick="handleAddToCart(event)"
+                  class="font-medium uppercase border-2 md:py-3 py-1.5 lg:col-span-2 sm:col-span-1 col-span-2 border-black md:text-base text-sm"
                 >
-                <button type="button" id="increaseQty" class="md:px-4 px-2 text-lg font-bold">+</button>
+                  Add to cart
+                </button>
+              </div>
+              <button
+                type="submit"
+                name="add"
+                class="w-full md:py-4 py-3 uppercase bg-black text-white md:text-base text-sm"
+              >
+                buy now
+              </button>
+            </div>
+          </div>
+          <div class="">
+            <h3 class="font-bold md:text-lg tracking-tight uppercase mb-2">Shipping</h3>
+            <div class="flex items-center justify-between mt-6 border-b-2 border-black pb-3">
+              <div class="flex items-center gap-3 w-full">
+                <img
+                  id="iconDelivery"
+                  src="{{ 'locationPin-icon.svg' | asset_url }}"
+                  width=""
+                  height=""
+                  class="h-10 md:w-8 w-6"
+                  alt=""
+                >
+                <input
+                  type="text"
+                  id="pincodeInput"
+                  placeholder="ENTER DELIVERY PINCODE"
+                  class="leading-tight w-full outline-none md:text-lg text-sm font-medium placeholder-black tracking-tighter"
+                >
               </div>
               <button
                 type="button"
-                id="add-to-cart-btn"
-                onclick="handleAddToCart(event)"
-                class="font-medium uppercase border-2 md:py-3 py-2 col-span-2 border-black md:text-base text-sm"
+                id="checkBtn"
+                class="text-[#4052BA] font-semibold md:text-lg text-sm ml-4 tracking-tighter"
               >
-                Add to cart
+                CHECK
               </button>
             </div>
-            <button
-              type="submit"
-              name="add"
-              class="w-full md:py-4 py-3 uppercase bg-black text-white md:text-base text-sm"
-            >
-              buy now
-            </button>
-          </div>
-        </div>
-        <div class="">
-          <h3 class="font-bold md:text-lg tracking-tight uppercase mb-2">Shipping</h3>
-          <div class="flex items-center justify-between mt-6 border-b-2 border-black pb-3">
-            <div class="flex items-center gap-3 w-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-7 h-8 text-gray-700"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-              </svg>
-              <input
-                type="text"
-                id="pincodeInput"
-                placeholder="ENTER DELIVERY PINCODE"
-                class="leading-tight w-full outline-none md:text-lg text-sm font-medium placeholder-black "
-              >
-            </div>
-            <button type="button" id="checkBtn" class="text-[#4052BA] font-semibold md:text-lg text-sm ml-4">
-              CHECK
-            </button>
-          </div>
 
-          <div class="mt-4 text-sm font-medium hidden" id="deliveryBox">
-            <p>
-              <span class="font-medium" id="deliveryDateText">DELIVERY BY - </span>
-              |
-              <span>FREE <span class="line-through text-gray-400">₹120</span></span>
-            </p>
-            <p class="text-gray-500 mt-1 font-medium" id="codText">IF ORDERED BEFORE 6PM TODAY</p>
-          </div>
+            <div class="mt-2 md:text-sm text-xs font-medium hidden  tracking-tighter" id="deliveryBox">
+              <p>
+                <span class="font-medium" id="deliveryDateText">DELIVERY BY - </span>
+                |
+                <span>FREE <span class="line-through">₹120</span></span>
+              </p>
+              <p class="text-gray-500 mt-1 font-medium" id="codText">IF ORDERED BEFORE 6PM TODAY</p>
+            </div>
 
-          <div class="flex items-center justify-between my-8 text-xs hidden" id="timeline">
-            <div class="flex flex-col items-center text-center font-semibold tracking-tighter">
-              <img
-                id="iconPurchased"
-                src="{{ 'blackCart-icon.svg' | asset_url }}"
-                width="28"
-                height=""
-                class="opacity-50"
-                alt=""
-              >
-              <p class="mt-2">PURCHASED</p>
-              <span id="purchasedDate"></span>
-            </div>
-            <div id="line1" class="flex-1 h-[2px] bg-gray-300 mx-2"></div>
-            <div class="flex flex-col items-center text-center font-semibold tracking-tighter">
-              <img
-                id="iconShipped"
-                src="{{ 'shipping-icon.svg' | asset_url }}"
-                width="28"
-                height=""
-                class="opacity-50"
-                alt=""
-              >
-              <p class="mt-2">SHIPPED</p>
-              <span id="shippedDate"></span>
-            </div>
-            <div id="line2" class="flex-1 h-[2px] bg-gray-300 mx-2"></div>
-            <div class="flex flex-col items-center text-center font-semibold tracking-tighter">
-              <img
-                id="iconDelivery"
-                src="{{ 'locationPin-icon.svg' | asset_url }}"
-                width="28"
-                height=""
-                class="opacity-50"
-                alt=""
-              >
-              <p class="mt-2">DELIVERY</p>
-              <span id="deliveredDate"></span>
-            </div>
-          </div>
-        </div>
-        <div class="text-gray-800" x-data="{ active: 'ingredients' }">
-          <div class="border-t border-[#DADADA] text-sm">
-            <button
-              type="button"
-              @click="active = active === 'ingredients' ? null : 'ingredients'"
-              class="w-full flex justify-between items-center py-4 tracking-wide transition-all duration-300 font-medium"
-            >
-              INGREDIENTS
-              <span class="transition-transform duration-300" :class="active === 'ingredients' ? 'rotate-180' : ''">
-                <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
-              </span>
-            </button>
-            <div
-              x-ref="ingredients"
-              class="overflow-hidden transition-all duration-500 ease-in-out"
-              :style="active === 'ingredients' ? 'max-height:' + $refs.ingredients.scrollHeight + 'px; opacity:1; transform:translateY(0)' : 'max-height:0px; opacity:0; transform:translateY(-10px)'"
-            >
-              <div class="pb-6 flex flex-col gap-3">
-                <p class="uppercase tracking-tight">
-                  100% Arabica coffee whole beans. No preservatives and no additives.
-                </p>
-                <div class="w-full h-36 border"></div>
+            <div class="flex items-center justify-between md:my-8 my-5 text-xs hidden" id="timeline">
+              <div class="flex flex-col items-center text-center font-semibold tracking-tighter">
+                <img
+                  id="iconPurchased"
+                  src="{{ 'blackCart-icon.svg' | asset_url }}"
+                  width=""
+                  height=""
+                  class="md:h-10 md:w-8 h-6 w-5"
+                  alt=""
+                >
+                <p class="md:mt-2 -mt-0.5 md:text-xs text-[0.6rem]">PURCHASED</p>
+                <span id="purchasedDate" class="md:text-xs text-[0.6rem]"></span>
+              </div>
+              <div id="line1" class="flex-1 h-[2px] bg-gray-300 mx-2"></div>
+              <div class="flex flex-col items-center text-center font-semibold tracking-tighter">
+                <img
+                  id="iconShipped"
+                  src="{{ 'shipping-icon.svg' | asset_url }}"
+                  width=""
+                  height=""
+                  class="md:h-10 md:w-8 h-6 w-5"
+                  alt=""
+                >
+                <p class="md:mt-2 -mt-0.5 md:text-xs text-[0.6rem]">SHIPPED</p>
+                <span id="shippedDate" class="md:text-xs text-[0.6rem]"></span>
+              </div>
+              <div id="line2" class="flex-1 h-[2px] bg-gray-300 mx-2"></div>
+              <div class="flex flex-col items-center text-center font-semibold tracking-tighter">
+                <img
+                  id="iconDelivery"
+                  src="{{ 'locationPin-icon.svg' | asset_url }}"
+                  width=""
+                  height=""
+                  class="md:h-10 md:w-8 h-6 w-5"
+                  alt=""
+                >
+                <p class="md:mt-2 -mt-0.5 md:text-xs text-[0.6rem]">DELIVERY</p>
+                <span id="deliveredDate" class="md:text-xs text-[0.6rem]"></span>
               </div>
             </div>
           </div>
-          <div class="border-t border-[#DADADA]">
-            <button
-              type="button"
-              @click="active = active === 'shipping' ? null : 'shipping'"
-              class="w-full flex justify-between items-center py-4 text-sm transition-all duration-300 font-medium "
-            >
-              SHIPPING POLICY
-              <span
-                class="transition-transform duration-300 font-medium"
-                :class="active === 'shipping' ? 'rotate-180' : ''"
+
+          <div class="" x-data="{ active: 'ingredients' }">
+            <div class="border-t border-[#DADADA] md:text-sm text-xs">
+              <button
+                type="button"
+                @click="active = active === 'ingredients' ? null : 'ingredients'"
+                class="w-full tracking-tight flex justify-between items-center py-3  transition-all duration-300 font-medium"
               >
-                <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
-              </span>
-            </button>
-            <div
-              x-ref="shipping"
-              class="overflow-hidden transition-all duration-500 ease-in-out"
-              :style="active === 'shipping' ? 'max-height:' + $refs.shipping.scrollHeight + 'px; opacity:1; transform:translateY(0)' : 'max-height:0px; opacity:0; transform:translateY(-10px)'"
-            >
-              <div class="pb-6 pt-2 text-xs text-gray-600 uppercase">{{ shop.shipping_policy.body }}</div>
-            </div>
-          </div>
-          <div class="border-t border-[#DADADA]">
-            <button
-              type="button"
-              @click="active = active === 'return' ? null : 'return'"
-              class="w-full flex justify-between items-center py-4 text-sm transition-all duration-300 font-medium"
-            >
-              RETURN AND REFUND POLICY
-              <span class="transition-transform duration-300" :class="active === 'return' ? 'rotate-180' : ''">
-                <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
-              </span>
-            </button>
-            <div
-              x-ref="return"
-              class="overflow-hidden transition-all duration-500 ease-in-out"
-              :style="active === 'return' ? 'max-height:' + $refs.return.scrollHeight + 'px; opacity:1; transform:translateY(0)' : 'max-height:0px; opacity:0; transform:translateY(-10px)'"
-            >
-              <div class="pb-6 pt-2 text-xs text-gray-600 uppercase">{{ shop.refund_policy.body }}</div>
-            </div>
-          </div>
-          <div class="border-t border-[#DADADA]">
-            <h3 class="text-lg font-semibold my-4">FAQ</h3>
-            {% if product.metafields.product.faq.value != blank %}
-              {% for faq in product.metafields.product.faq.value %}
-                {% assign key = 'faq_' | append: forloop.index %}
-                <div class="border-t border-[#DADADA]">
-                  <button
-                    type="button"
-                    @click="active = active === '{{ key }}' ? null : '{{ key }}'"
-                    class="w-full flex justify-between items-center py-4 text-sm transition-all duration-300 font-medium"
-                  >
-                    {{ faq.question }}
-                    <span class="transition-transform duration-300" :class="active === '{{ key }}' ? 'rotate-180' : ''">
-                      <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
-                    </span>
-                  </button>
-                  <div
-                    x-ref="{{ key }}"
-                    class="overflow-hidden transition-all duration-500 ease-in-out uppercase"
-                    :style="active === '{{ key }}' ? 'max-height:' + $refs['{{ key }}'].scrollHeight + 'px; opacity:1; transform:translateY(0)' : 'max-height:0px; opacity:0; transform:translateY(-10px)'"
-                  >
-                    <div class="pb-6 pt-2 text-xs text-gray-600">{{ faq.answer | metafield_tag }}</div>
-                  </div>
+                INGREDIENTS
+                <span class="transition-transform duration-300" :class="active === 'ingredients' ? 'rotate-180' : ''">
+                  <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
+                </span>
+              </button>
+
+              <div
+                x-ref="ingredients"
+                class="overflow-hidden transition-all duration-500 ease-in-out"
+                :style="active === 'ingredients' ? 'max-height:' + $refs.ingredients.scrollHeight + 'px; transform:translateY(0)' : 'max-height:0px; transform:translateY(-10px)'"
+              >
+                <div class="pb-6 flex flex-col gap-3">
+                  <p class="uppercase tracking-tight text-xs">
+                    100% Arabica coffee whole beans. No preservatives and no additives.
+                  </p>
+                  <div class="w-full h-36 border"></div>
                 </div>
-              {% endfor %}
-            {% endif %}
+              </div>
+            </div>
+
+            <div class="border-t border-[#DADADA]">
+              <button
+                type="button"
+                @click="active = active === 'shipping' ? null : 'shipping'"
+                class="w-full tracking-tight flex justify-between items-center py-3 md:text-sm text-xs transition-all duration-300 font-medium "
+              >
+                SHIPPING POLICY
+                <span
+                  class="transition-transform duration-300 font-medium"
+                  :class="active === 'shipping' ? 'rotate-180' : ''"
+                >
+                  <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
+                </span>
+              </button>
+              <div
+                x-ref="shipping"
+                class="overflow-hidden transition-all duration-500 ease-in-out"
+                :style="active === 'shipping' ? 'max-height:' + $refs.shipping.scrollHeight + 'px; transform:translateY(0)' : 'max-height:0px; transform:translateY(-10px)'"
+              >
+                <div class="pb-6 pt-2 text-xs uppercase tracking-tight">{{ shop.shipping_policy.body }}</div>
+              </div>
+            </div>
+
+            <div class="border-t border-[#DADADA]">
+              <button
+                type="button"
+                @click="active = active === 'return' ? null : 'return'"
+                class="w-full tracking-tight flex justify-between items-center py-3 md:text-sm text-xs transition-all duration-300 font-medium"
+              >
+                RETURN AND REFUND POLICY
+                <span class="transition-transform duration-300" :class="active === 'return' ? 'rotate-180' : ''">
+                  <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
+                </span>
+              </button>
+              <div
+                x-ref="return"
+                class="overflow-hidden transition-all duration-500 ease-in-out"
+                :style="active === 'return' ? 'max-height:' + $refs.return.scrollHeight + 'px; transform:translateY(0)' : 'max-height:0px; transform:translateY(-10px)'"
+              >
+                <div class="pb-6 pt-2 text-xs uppercase tracking-tight">{{ shop.refund_policy.body }}</div>
+              </div>
+            </div>
+            <div class="border-t border-[#DADADA]">
+              <h3 class="text-lg font-bold my-4 tracking-tight">FAQ</h3>
+              {% if product.metafields.product.faq.value != blank %}
+                {% for faq in product.metafields.product.faq.value %}
+                  {% assign key = 'faq_' | append: forloop.index %}
+                  <div class="border-t border-b border-[#DADADA]">
+                    <button
+                      type="button"
+                      @click="active = active === '{{ key }}' ? null : '{{ key }}'"
+                      class="w-full flex justify-between items-center pt-2 pb-3 md:text-sm text-xs transition-all duration-300 font-medium tracking-tight"
+                    >
+                      {{ faq.question }}
+                      <span
+                        class="transition-transform duration-300"
+                        :class="active === '{{ key }}' ? 'rotate-180' : ''"
+                      >
+                        <img src="{{ 'downArrow-icon.svg' | asset_url }}" alt="Add" width="10" height="10">
+                      </span>
+                    </button>
+                    <div
+                      x-ref="{{ key }}"
+                      class="overflow-hidden transition-all duration-500 ease-in-out uppercase"
+                      :style="active === '{{ key }}' ? 'max-height:' + $refs['{{ key }}'].scrollHeight + 'px; opacity:1; transform:translateY(0)' : 'max-height:0px; opacity:0; transform:translateY(-10px)'"
+                    >
+                      <div class="pb-3 text-xs tracking-tight">{{ faq.answer | metafield_tag }}</div>
+                    </div>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            </div>
           </div>
         </div>
       </form>

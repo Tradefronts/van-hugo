@@ -21,6 +21,11 @@ module.exports = {
           "100%": { transform: "scale(0)" },
         },
       },
+
+      fontFamily: {
+        inter: ['Inter', 'sans-serif'],
+      },
+
       animation: {
         "menu-open": "menu-open 1s ease-out forwards",
         "menu-close": "menu-close 1s ease-out forwards",
