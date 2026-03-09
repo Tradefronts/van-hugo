@@ -13,7 +13,45 @@
       transform: translateX(0);
     }
   }
+
+  #vd-panel {
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  #vd-panel.open {
+    transform: translateY(0);
+  }
+
+  #vd-overlay {
+    transition: background 0.35s ease;
+  }
+
+  @media (min-width: 768px) {
+    #vd-panel {
+      transform: translateX(100%);
+    }
+    #vd-panel.open {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes vd-shimmer {
+    0% {
+      background-position: -600px 0;
+    }
+    100% {
+      background-position: 600px 0;
+    }
+  }
+
+  .vd-shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 600px 100%;
+    animation: vd-shimmer 1.4s infinite linear;
+  }
 </style>
+
 <div
   id="vd-overlay"
   onclick="vdOverlayClick(event)"
@@ -21,7 +59,8 @@
 ></div>
 <div
   id="vd-panel"
-  class="font-inter
+  class="
+    font-inter
     fixed z-[10002] bg-white flex flex-col overflow-hidden
     transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
     shadow-[0_-4px_24px_rgba(0,0,0,0.12)]
@@ -32,80 +71,111 @@
 >
   <div class="w-full flex items-center justify-between px-5 py-3 border-b border-[#DADADA] flex-shrink-0">
     <h2 id="cart-title" class="text-sm font-bold uppercase tracking-tight">Select Variations</h2>
-    <button
-      id="cart-close-btn"
-      onclick="closeVariationDrawer()"
-    >
-      <img src="{{ 'blackCross-icon.svg' | asset_url }}" width="10" height="12" alt="Account">
+    <button id="cart-close-btn" onclick="closeVariationDrawer()">
+      <img src="{{ 'blackCross-icon.svg' | asset_url }}" width="10" height="12" alt="Close">
     </button>
   </div>
   <div class="flex-1 overflow-y-auto px-5 py-5 space-y-6">
-    <div class="flex gap-2 items-start">
-      <div class="pt-3">
-        <img
-          id="vd-image"
-          src=""
-          alt=""
-          class="w-24 h-20 object-contain flex-shrink-0"
-          height=""
-          width=""
-        >
+    <div id="vd-shimmer-state">
+      <div class="flex gap-4 items-start my-6  ">
+        <div class="pt-5">
+          <div class="animate-pulse md:w-16 w-14 md:h-20 h-16 flex-shrink-0 rounded bg-gray-200"></div>
+        </div>
+        <div class="min-w-0 flex-1 pt-2 space-y-2">
+          <div class="animate-pulse md:h-5 h-3 w-3/4  bg-gray-200"></div>
+          <div class="animate-pulse md:h-3 h-2 w-1/3  bg-gray-200"></div>
+        </div>
       </div>
-      <div class="min-w-0">
-        <p id="vd-title" class="font-bold text-lg uppercase leading-tight "></p>
-        <p id="vd-type" class="text-sm mt-0.5 uppercase tracking-wide"></p>
-        <a
-          id="vd-link"
-          href="#"
-          onclick="event.stopPropagation()"
-          class="text-[9px] uppercase  text-gray-400 underline mt-1.5 block"
-          >View Product</a
-        >
+
+      <div class="mb-6">
+        <div class="animate-pulse h-5 w-24 mb-3 bg-gray-200"></div>
+        <div class="w-full grid grid-cols-3 gap-2">
+          <div class="animate-pulse md:h-9 h-7 w-full rounded-full bg-gray-200"></div>
+          <div class="animate-pulse md:h-9 h-7 w-full rounded-full bg-gray-200"></div>
+          <div class="animate-pulse md:h-9 h-7 w-full rounded-full bg-gray-200"></div>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <div class="animate-pulse h-5 w-28 mb-3  bg-gray-200"></div>
+        <div class="grid grid-cols-4 gap-2">
+          <div class="animate-pulse h-14 rounded bg-gray-200"></div>
+          <div class="animate-pulse h-14 rounded bg-gray-200"></div>
+          <div class="animate-pulse h-14 rounded bg-gray-200"></div>
+          <div class="animate-pulse h-14 rounded bg-gray-200"></div>
+          <div class="animate-pulse h-14 rounded bg-gray-200"></div>
+          <div class="animate-pulse h-14 rounded bg-gray-200"></div>
+          <div class="animate-pulse h-14 rounded bg-gray-200"></div>
+          <div class="animate-pulse h-14 rounded bg-gray-200"></div>
+        </div>
       </div>
     </div>
-    <div id="vd-pack-section">
-      <p class="text-base font-bold uppercase tracking-tighter mb-3">Pack Size</p>
-      <div id="vd-pack-options" class="w-full grid grid-cols-3 gap-2"></div>
-    </div>
-    <div id="vd-grind-section" class="">
-      <p class="text-base font-bold uppercase tracking-tighter mb-3">Grind Size</p>
-      <div id="vd-grind-options" class="grid grid-cols-4 gap-y-4"></div>
-    </div>
-    <div class="flex items-center gap-3 flex-wrap">
-      <span id="vd-price" class="text-2xl font-bold tracking-tight"></span>
-      <span id="vd-compare" class="text-lg text-[#ABABAB] font-semibold line-through hidden"></span>
-      <span id="vd-discount" class="text-lg font-bold text-[#900000] hidden"></span>
-    </div>
-    <div class="flex items-center justify-between">
-      <button
-        type="button"
-        id="vd-dec"
-        onclick="vdDecQty()"
-        disabled
-        class="w-11 h-11 flex items-center justify-center text-lg  bg-white cursor-pointer hover:bg-gray-50 disabled:text-gray-300 disabled:cursor-not-allowed flex-shrink-0"
-      >
-        −
-      </button>
-      <span
-        id="vd-qty-num"
-        class="min-w-[3.5rem] h-11 flex items-center justify-center text-sm font-bold select-none flex-shrink-0"
-        >1</span
-      >
-      <button
-        type="button"
-        id="vd-inc"
-        onclick="vdIncQty()"
-        class="w-11 h-11 flex items-center justify-center text-lg  bg-white cursor-pointer hover:bg-gray-50 disabled:text-gray-300 disabled:cursor-not-allowed flex-shrink-0"
-      >
-        +
-      </button>
+
+    <div id="vd-content-state" class="hidden space-y-6">
+      <div class="flex gap-2 items-start">
+        <div class="pt-3">
+          <img id="vd-image" src="" alt="" class="w-24 h-20 object-contain flex-shrink-0" height="" width="">
+        </div>
+        <div class="min-w-0">
+          <p id="vd-title" class="font-bold text-lg uppercase leading-tight"></p>
+          <p id="vd-type" class="text-sm mt-0.5 uppercase tracking-wide"></p>
+          <a
+            id="vd-link"
+            href="#"
+            onclick="event.stopPropagation()"
+            class="text-[9px] uppercase text-gray-400 underline mt-1.5 block"
+            >View Product</a
+          >
+        </div>
+      </div>
+
+      <div id="vd-pack-section">
+        <p class="text-base font-bold uppercase tracking-tighter mb-3">Pack Size</p>
+        <div id="vd-pack-options" class="w-full grid grid-cols-3 gap-2"></div>
+      </div>
+
+      <div id="vd-grind-section">
+        <p class="text-base font-bold uppercase tracking-tighter mb-3">Grind Size</p>
+        <div id="vd-grind-options" class="grid grid-cols-4 gap-y-4"></div>
+      </div>
+
+      <div class="flex items-center gap-3 flex-wrap">
+        <span id="vd-price" class="text-2xl font-bold tracking-tight"></span>
+        <span id="vd-compare" class="text-lg text-[#ABABAB] font-semibold line-through hidden"></span>
+        <span id="vd-discount" class="text-lg font-bold text-[#900000] hidden"></span>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <button
+          type="button"
+          id="vd-dec"
+          onclick="vdDecQty()"
+          disabled
+          class="w-11 h-11 flex items-center justify-center text-lg bg-white cursor-pointer hover:bg-gray-50 disabled:text-gray-300 disabled:cursor-not-allowed flex-shrink-0"
+        >
+          −
+        </button>
+        <span
+          id="vd-qty-num"
+          class="min-w-[3.5rem] h-11 flex items-center justify-center text-sm font-bold select-none flex-shrink-0"
+          >1</span
+        >
+        <button
+          type="button"
+          id="vd-inc"
+          onclick="vdIncQty()"
+          class="w-11 h-11 flex items-center justify-center text-lg bg-white cursor-pointer hover:bg-gray-50 disabled:text-gray-300 disabled:cursor-not-allowed flex-shrink-0"
+        >
+          +
+        </button>
+      </div>
     </div>
   </div>
   <div class="flex-shrink-0 px-5 py-4 border-t border-gray-200">
     <button
       id="vd-add-btn"
       onclick="vdAddToCart()"
-      class="w-full bg-black text-white py-4 text-xs font-bold uppercase tracking-widest hover:bg-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed"
+      class="w-full bg-black text-white py-4 text-xs font-bold uppercase tracking-tighter rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
     >
       Add to Cart
     </button>
@@ -113,6 +183,10 @@
 </div>
 
 <script>
+  window.vdOverlayClick = function (e) {
+    if (e.target.id === 'vd-overlay') closeVariationDrawer();
+  };
+
   (function () {
     var _vdVariants = [];
     var _vdSelectedId = null;
@@ -123,7 +197,19 @@
     var _vdSelectedPack = null;
     var _vdSelectedGrind = null;
 
+    function showShimmer() {
+      document.getElementById('vd-shimmer-state').classList.remove('hidden');
+      document.getElementById('vd-content-state').classList.add('hidden');
+      document.getElementById('vd-add-btn').disabled = true;
+    }
+    function showContent() {
+      document.getElementById('vd-shimmer-state').classList.add('hidden');
+      document.getElementById('vd-content-state').classList.remove('hidden');
+    }
     window.openVariationDrawer = function (productHandle) {
+      var btn = document.getElementById('vd-add-btn');
+      btn.disabled = false;
+      btn.innerHTML = 'Add to Cart';
       _vdQty = 1;
       _vdSelectedId = null;
 
@@ -132,6 +218,12 @@
       document.getElementById('vd-inc').disabled = false;
       document.getElementById('vd-pack-options').innerHTML = '';
       document.getElementById('vd-grind-options').innerHTML = '';
+      showShimmer();
+      var overlay = document.getElementById('vd-overlay');
+      overlay.classList.remove('bg-black/0', 'pointer-events-none');
+      overlay.classList.add('bg-black/45', 'pointer-events-auto');
+      document.getElementById('vd-panel').classList.add('open');
+      document.body.style.overflow = 'hidden';
 
       fetch('/products/' + productHandle + '.js')
         .then(function (r) {
@@ -156,6 +248,7 @@
           });
           renderPackOptions();
           renderGrindOptions();
+
           var first =
             _vdVariants.find(function (v) {
               return v.available;
@@ -168,13 +261,14 @@
             vdHighlightGrind(_vdSelectedGrind);
             vdUpdatePrice(first);
           }
+
+          showContent();
+        })
+        .catch(function () {
+          showContent();
         });
-      var overlay = document.getElementById('vd-overlay');
-      overlay.classList.remove('bg-black/0', 'pointer-events-none');
-      overlay.classList.add('bg-black/45', 'pointer-events-auto');
-      document.getElementById('vd-panel').classList.add('open');
-      document.body.style.overflow = 'hidden';
     };
+
     function vdOpt(v, idx) {
       if (idx == 0) return v.option1;
       if (idx == 1) return v.option2;
@@ -188,12 +282,8 @@
       });
       document.getElementById('vd-pack-options').innerHTML = vals
         .map(function (val) {
-          var base = 'px-4 py-2 border border-black rounded-full text-sm font-bold uppercase cursor-pointer';
-
           return (
-            '<button type="button" class="' +
-            base +
-            '" data-pack="' +
+            '<button type="button" class="px-4 py-2 border border-black rounded-full text-sm font-bold uppercase cursor-pointer" data-pack="' +
             val +
             '" onclick="vdSelectPack(this)">' +
             val +
@@ -211,12 +301,8 @@
       });
       document.getElementById('vd-grind-options').innerHTML = vals
         .map(function (val) {
-          var base = 'p-2 text-center rounded uppercase cursor-pointer tracking-tight text-[0.7rem]';
-
           return (
-            '<button type="button" class="' +
-            base +
-            '" data-grind="' +
+            '<button type="button" class="p-2 text-center rounded uppercase cursor-pointer tracking-tight text-[0.7rem]" data-grind="' +
             val +
             '" onclick="vdSelectGrind(this)">' +
             val.replace(' ', '<br>') +
@@ -269,6 +355,7 @@
       document.getElementById('vd-price').textContent = '₹' + price;
       var ce = document.getElementById('vd-compare');
       var de = document.getElementById('vd-discount');
+      document.getElementById('vd-add-btn').disabled = !variant.available;
       if (compare && compare > price) {
         var pct = Math.round(((compare - price) * 100) / compare);
         ce.textContent = '₹' + compare;
@@ -281,6 +368,9 @@
       }
     }
     window.closeVariationDrawer = function () {
+      var btn = document.getElementById('vd-add-btn');
+      btn.disabled = false;
+      btn.innerHTML = 'Add to Cart';
       var overlay = document.getElementById('vd-overlay');
       overlay.classList.remove('bg-black/45', 'pointer-events-auto');
       overlay.classList.add('bg-black/0', 'pointer-events-none');
@@ -289,16 +379,50 @@
     };
     window.vdAddToCart = function () {
       if (!_vdSelectedId) return;
+      var btn = document.getElementById('vd-add-btn');
+      btn.disabled = true;
+      btn.innerHTML = `
+    <span class="flex items-center justify-center gap-2">
+      <svg class="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" stroke="white" stroke-width="3" fill="none" opacity="0.25"/>
+        <path d="M22 12a10 10 0 00-10-10" stroke="white" stroke-width="3" fill="none"/>
+      </svg>
+      Adding...
+    </span>
+  `;
       fetch('/cart/add.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: _vdSelectedId, quantity: _vdQty }),
-      }).then(function () {
-        closeVariationDrawer();
-        setTimeout(function () {
-          if (typeof window.openCartDrawer === 'function') window.openCartDrawer();
-        }, 320);
-      });
+        body: JSON.stringify({
+          id: _vdSelectedId,
+          quantity: _vdQty,
+        }),
+      })
+        .then(function () {
+          closeVariationDrawer();
+          setTimeout(function () {
+            if (typeof window.openCartDrawer === 'function') {
+              window.openCartDrawer();
+            }
+          }, 250);
+        })
+        .catch(function () {
+          btn.disabled = false;
+          btn.innerHTML = 'Add to Cart';
+        });
+    };
+    window.vdIncQty = function () {
+      if (_vdQty >= _vdMaxQty) return;
+      _vdQty++;
+      document.getElementById('vd-qty-num').textContent = _vdQty;
+      document.getElementById('vd-dec').disabled = _vdQty <= 1;
+    };
+
+    window.vdDecQty = function () {
+      if (_vdQty <= 1) return;
+      _vdQty--;
+      document.getElementById('vd-qty-num').textContent = _vdQty;
+      document.getElementById('vd-dec').disabled = _vdQty <= 1;
     };
   })();
 </script>

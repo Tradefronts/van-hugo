@@ -78,6 +78,7 @@
     white-space:nowrap;
   "
 ></div>
+
 <script>
   (function () {
     var _cartUpdating = false;
@@ -124,6 +125,8 @@
     });
 
     function fetchCart() {
+       document.getElementById('cart-items').innerHTML =
+    '<div class="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">Loading...</div>';
       fetch('/cart.js')
         .then(function (r) {
           return r.json();
@@ -361,7 +364,7 @@
     }
 
     function buildCard(p, mode) {
-      var price = Math.round(p.variants[0].price / 100);
+      var price = Math.round(p.variants[0].price);
       var oldPrice = p.variants[0].compare_at_price ? Number(p.variants[0].compare_at_price).toFixed(2) : null;
       var img = 'https://via.placeholder.com/400';
       if (p.images && p.images.length > 0) {

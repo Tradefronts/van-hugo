@@ -20,7 +20,6 @@
         {% endfor %}
       </div>
     </div>
-
     <div class="xl:w-5/12 md:w-1/2 w-full lg:space-y-8 space-y-5 font-inter xl:pr-12 md:pt-5 lg:pt-0  ">
       <form
         id="product-form"
@@ -37,7 +36,7 @@
               {{ product.metafields.coffee.bean }}
             </span>
           </div>
-          <div class="text-[#8D8D8D] font-medium md:text-lg tracking-tighter text-xs" style="line-height: 1.2;">
+          <div class="text-[#8D8D8D] md:text-lg tracking-tighter text-xs" style="line-height: 1.2;">
             {{ product.description | replace: '<p>', '<p style="margin-bottom: 0.60rem;">' }}
           </div>
         </div>
@@ -74,7 +73,6 @@
           {% unless product.has_only_default_variant %}
             <div class="grind-size">
               <p class="font-bold md:text-lg text-sm tracking-tight uppercase">Grind Size</p>
-
               {% for option in product.options_with_values %}
                 {% if option.name == 'Grind size' %}
                   <div class="grid lg:grid-cols-4 sm:grid-cols-3 grid-cols-4 md:gap-3 gap-1 mt-4">
@@ -250,17 +248,48 @@
                 </span>
               </button>
 
+              {% comment %}
+                <div
+                  x-ref="ingredients"
+                  class="overflow-hidden transition-all duration-500 ease-in-out"
+                  :style="active === 'ingredients' ? 'max-height:' + $refs.ingredients.scrollHeight + 'px; transform:translateY(0)' : 'max-height:0px; transform:translateY(-10px)'"
+                >
+                  <div class="pb-6 flex flex-col gap-3">
+                    <p class="uppercase tracking-tight text-xs">
+                      100% Arabica coffee whole beans. No preservatives and no additives.
+                    </p>
+                    <div class=" md:h-42 h-36 w-full border">
+                      <img src="{{ 'ingredients-ss.png' | asset_url }}" width="" height="" class="h-full w-full">
+                    </div>
+                  </div>
+                </div>
+              {% endcomment %}
+              {% assign ingredients = product.metafields.coffee.ingredients.value %}
+
               <div
                 x-ref="ingredients"
                 class="overflow-hidden transition-all duration-500 ease-in-out"
                 :style="active === 'ingredients' ? 'max-height:' + $refs.ingredients.scrollHeight + 'px; transform:translateY(0)' : 'max-height:0px; transform:translateY(-10px)'"
               >
-                <div class="pb-6 flex flex-col gap-3">
-                  <p class="uppercase tracking-tight text-xs">
-                    100% Arabica coffee whole beans. No preservatives and no additives.
-                  </p>
-                  <div class="w-full h-36 border"></div>
-                </div>
+                {% if ingredients %}
+                  <div class="pb-6 flex flex-col gap-3">
+                    <p class="uppercase tracking-tight text-xs">
+                      {{ ingredients.text }}
+                    </p>
+
+                    {% if ingredients.image %}
+                      <div class="md:h-42 h-36 w-full border">
+                        <img
+                          src="{{ ingredients.image | image_url: width: 800 }}"
+                          alt="Ingredients"
+                          class="h-full w-full "
+                          height=""
+                          width=""
+                        >
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endif %}
               </div>
             </div>
 
