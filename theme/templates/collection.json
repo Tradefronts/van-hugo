@@ -3,9 +3,7 @@
     "section": {
       "type": "section",
       "settings": {}
-    },
-   
-
+    }
   },
   "order": ["section"]
 }

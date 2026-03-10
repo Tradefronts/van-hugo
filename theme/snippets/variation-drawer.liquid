@@ -171,9 +171,9 @@
       </div>
     </div>
   </div>
-  <div class="flex-shrink-0 px-5 py-4 border-t border-gray-200">
+  <div class="flex-shrink-0 px-5 py-4">
     <button
-      id="vd-add-btn"
+      id="vd-addToCart-btn"
       onclick="vdAddToCart()"
       class="w-full bg-black text-white py-4 text-xs font-bold uppercase tracking-tighter rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
     >
@@ -200,14 +200,14 @@
     function showShimmer() {
       document.getElementById('vd-shimmer-state').classList.remove('hidden');
       document.getElementById('vd-content-state').classList.add('hidden');
-      document.getElementById('vd-add-btn').disabled = true;
+      document.getElementById('vd-addToCart-btn').disabled = true;
     }
     function showContent() {
       document.getElementById('vd-shimmer-state').classList.add('hidden');
       document.getElementById('vd-content-state').classList.remove('hidden');
     }
     window.openVariationDrawer = function (productHandle) {
-      var btn = document.getElementById('vd-add-btn');
+      var btn = document.getElementById('vd-addToCart-btn');
       btn.disabled = false;
       btn.innerHTML = 'Add to Cart';
       _vdQty = 1;
@@ -302,7 +302,7 @@
       document.getElementById('vd-grind-options').innerHTML = vals
         .map(function (val) {
           return (
-            '<button type="button" class="p-2 text-center rounded uppercase cursor-pointer tracking-tight text-[0.7rem]" data-grind="' +
+            '<button type="button" class="p-2  text-center rounded uppercase cursor-pointer tracking-tight text-[0.7rem]" data-grind="' +
             val +
             '" onclick="vdSelectGrind(this)">' +
             val.replace(' ', '<br>') +
@@ -319,11 +319,13 @@
     window.vdSelectPack = function (btn) {
       _vdSelectedPack = btn.getAttribute('data-pack');
       vdHighlightPack(_vdSelectedPack);
+      vdResetQty();
       updateVariant();
     };
     window.vdSelectGrind = function (btn) {
       _vdSelectedGrind = btn.getAttribute('data-grind');
       vdHighlightGrind(_vdSelectedGrind);
+      vdResetQty();
       updateVariant();
     };
     function updateVariant() {
@@ -355,7 +357,16 @@
       document.getElementById('vd-price').textContent = '₹' + price;
       var ce = document.getElementById('vd-compare');
       var de = document.getElementById('vd-discount');
-      document.getElementById('vd-add-btn').disabled = !variant.available;
+      var addToCartBtn = document.getElementById('vd-addToCart-btn');
+      document.getElementById('vd-inc').disabled = !variant.available;
+      if (!variant.available) {
+        addToCartBtn.disabled = true;
+        addToCartBtn.innerHTML = 'Out of Stock';
+      } else {
+        addToCartBtn.disabled = false;
+        addToCartBtn.innerHTML = 'Add to Cart';
+      }
+
       if (compare && compare > price) {
         var pct = Math.round(((compare - price) * 100) / compare);
         ce.textContent = '₹' + compare;
@@ -368,7 +379,7 @@
       }
     }
     window.closeVariationDrawer = function () {
-      var btn = document.getElementById('vd-add-btn');
+      var btn = document.getElementById('vd-addToCart-btn');
       btn.disabled = false;
       btn.innerHTML = 'Add to Cart';
       var overlay = document.getElementById('vd-overlay');
@@ -379,7 +390,7 @@
     };
     window.vdAddToCart = function () {
       if (!_vdSelectedId) return;
-      var btn = document.getElementById('vd-add-btn');
+      var btn = document.getElementById('vd-addToCart-btn');
       btn.disabled = true;
       btn.innerHTML = `
     <span class="flex items-center justify-center gap-2">
@@ -424,5 +435,11 @@
       document.getElementById('vd-qty-num').textContent = _vdQty;
       document.getElementById('vd-dec').disabled = _vdQty <= 1;
     };
+
+    function vdResetQty() {
+      _vdQty = 1;
+      document.getElementById('vd-qty-num').textContent = '1';
+      document.getElementById('vd-dec').disabled = true;
+    }
   })();
 </script>

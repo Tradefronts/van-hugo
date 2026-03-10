@@ -4,14 +4,11 @@
       "type": "product",
       "settings": {}
     },
-    "accordian": {
-      "type": "product-accordion",
-      "settings": {}
-    },
+
     "product_recommendations": {
       "type": "product-recommendations",
       "settings": {}
     }
   },
-  "order": ["product_1", "accordian", "product_recommendations"]
+  "order": ["product_1", "product_recommendations"]
 }

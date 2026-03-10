@@ -15,7 +15,7 @@
         </h2>
       </div>
       <div id="rec-desktop" class="flex-1 overflow-y-auto no-scrollbar relative">
-        <div class="absolute inset-0 flex items-center justify-center text-sm text-gray-400">Loading...</div>
+        <div class="absolute inset-0 flex items-center justify-center text-sm text-gray-400 animate-pulse">Loading...</div>
       </div>
     </div>
     <div class="w-full flex flex-col flex-1  overflow-hidden bg-white ">
@@ -34,17 +34,17 @@
           </div>
         </div>
         <div class="md:hidden" style="padding:1.25rem 1rem 1rem;">
-          <p style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;text-align:center;color:#6b7280;margin-bottom:1rem;">
+          <p class="font-bold uppercase text-center tracking-tighter text-sm" style="margin-bottom:1rem">
             You May Also Like
           </p>
           <div id="rec-mobile" class="relative grid grid-cols-2">
-            <p class="absolute inset-0 flex items-center justify-center text-xs text-gray-400">Loading...</p>
+            <p class="absolute inset-0 flex items-center justify-center text-xs text-gray-400 animate-pulse">Loading...</p>
           </div>
         </div>
       </div>
-      <div style="border-top:1px solid #f3f4f6;padding:1rem 1.25rem;flex-shrink:0;">
-        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;">
-          <span>Add order note</span>
+      <div class="border-t border-[#DFDFDF] flex-shrink-0 pb-7 pt-4 px-6">
+        <div class="flex justify-between text-[#777777] uppercase text-xs tracking-tighter mb-3">
+          <span class="block underline">Add order note</span>
           <span>Including shipping &amp; taxes</span>
         </div>
         <a
@@ -53,7 +53,7 @@
         >
           <img src="{{ 'lock-icon.svg' | asset_url }}" width="14" height="14" alt="Account">
           <span style="flex:1;text-align:center">CHECKOUT • <span id="checkout-price">₹0</span></span>
-          <span style="width:1rem;"></span>
+          <span style="width:1rem"></span>
         </a>
       </div>
     </div>
@@ -125,8 +125,8 @@
     });
 
     function fetchCart() {
-       document.getElementById('cart-items').innerHTML =
-    '<div class="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">Loading...</div>';
+      document.getElementById('cart-items').innerHTML =
+        '<div class="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">Loading...</div>';
       fetch('/cart.js')
         .then(function (r) {
           return r.json();
@@ -163,18 +163,7 @@
         .map(function (item, i) {
           var lineIndex = i + 1;
           var qty = item.quantity;
-          var maxQty = 9999;
-          if (
-            item.inventory_policy === 'deny' &&
-            typeof item.inventory_quantity === 'number' &&
-            item.inventory_quantity > 0
-          ) {
-            maxQty = item.inventory_quantity;
-          }
-
           var atMin = qty <= 1;
-          var atMax = qty >= maxQty;
-
           var img = 'https://via.placeholder.com/64';
 
           if (item.featured_image && item.featured_image.url) {
@@ -217,34 +206,27 @@
             lineIndex +
             '" data-qty="' +
             (qty - 1) +
-            '" data-max="' +
-            maxQty +
-            '" onclick="window.cartQtyChange(event)" ' +
+            '" ' +
+            'onclick="window.cartQtyChange(event)" ' +
             (atMin ? 'disabled' : '') +
             '>−</button>' +
             '<span class="w-10 h-8 flex items-center justify-center text-sm font-semibold select-none">' +
             qty +
             '</span>' +
             '<button type="button" ' +
-            'class="w-8 h-8 flex items-center justify-center text-base bg-white transition ' +
-            (atMax ? 'opacity-30 cursor-not-allowed' : 'hover:bg-gray-100') +
-            '" ' +
+            'class="w-8 h-8 flex items-center justify-center text-base bg-white transition hover:bg-gray-100" ' +
             'data-line="' +
             lineIndex +
             '" data-qty="' +
             (qty + 1) +
-            '" data-max="' +
-            maxQty +
-            '" onclick="window.cartQtyChange(event)" ' +
-            (atMax ? 'disabled' : '') +
-            '>+</button>' +
+            '" ' +
+            'onclick="window.cartQtyChange(event)">+</button>' +
             '<button type="button" ' +
             'class="ml-4 text-[0.6rem] text-gray-400 underline bg-transparent border-none cursor-pointer hover:text-black transition" ' +
             'data-line="' +
             lineIndex +
-            '" data-qty="0" data-max="' +
-            maxQty +
-            '" onclick="window.cartQtyChange(event)">Remove</button>' +
+            '" data-qty="0" ' +
+            'onclick="window.cartQtyChange(event)">Remove</button>' +
             '</div>' +
             '</div>' +
             '</div>'
@@ -260,39 +242,44 @@
       var btn = e.currentTarget;
       var line = parseInt(btn.getAttribute('data-line'));
       var qty = parseInt(btn.getAttribute('data-qty'));
-      var maxQty = parseInt(btn.getAttribute('data-max')) || 9999;
-
       if (btn.disabled || _cartUpdating) return;
-
-      if (qty > maxQty) {
-        showToast('Only ' + maxQty + ' item' + (maxQty !== 1 ? 's' : '') + ' available in stock');
-        btn.disabled = true;
-        btn.style.opacity = '0.35';
-        btn.style.cursor = 'not-allowed';
-        return;
-      }
+      if (qty < 0) return;
       _cartUpdating = true;
 
       document.querySelectorAll('#cart-items button').forEach(function (b) {
         b.disabled = true;
         b.style.opacity = '0.4';
       });
-
       fetch('/cart/change.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ line: line, quantity: qty }),
       })
         .then(function (r) {
+          if (!r.ok) {
+            return r.json().then(function (err) {
+              showToast(err.description || 'Maximum stock reached');
+              document.querySelectorAll('#cart-items button').forEach(function (b) {
+                b.disabled = false;
+                b.style.opacity = '';
+              });
+              _cartUpdating = false;
+              return null;
+            });
+          }
           return r.json();
         })
         .then(function (cart) {
+          if (!cart) return;
+
           renderCart(cart);
-          if (typeof updateCartBadge === 'function') updateCartBadge();
+
+          if (typeof updateCartBadge === 'function') {
+            updateCartBadge();
+          }
         })
         .catch(function (err) {
           console.error('Cart update error:', err);
-          fetchCart();
         })
         .finally(function () {
           _cartUpdating = false;
@@ -409,7 +396,6 @@
 
     window.addRecToCart = function (variantId, btn) {
       var orig = btn.innerHTML;
-      btn.innerHTML = '✓';
       btn.disabled = true;
       fetch('/cart/add.js', {
         method: 'POST',
