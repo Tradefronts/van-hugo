@@ -15,19 +15,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
   </head>
 
-  <body class="bg-[#FAFAFC]">
+  <body class="">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     {% section 'header' %}
-
-    <main class="sans-serif mt-12">
-      {{ content_for_layout }}
+    
+    <main class="mt-12">
+      {% if request.path contains '/policies/' %}
+        <section class="w-full p-8 font-inter">
+          <div class="prose max-w-none w-full tracking-tight">
+            {{ content_for_layout }}
+          </div>
+        </section>
+      {% else %}
+        {{ content_for_layout }}
+      {% endif %}
     </main>
 
     {% section 'footer' %}
 
     {% render 'cart-drawer' %}
     {% render 'variation-drawer' %}
-
   </body>
 </html>

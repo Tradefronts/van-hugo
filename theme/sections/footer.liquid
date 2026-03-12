@@ -22,43 +22,51 @@
       <div class="flex flex-col md:items-start items-center md:justify-start justify-center gap-6">
         <h6 class="uppercase text-sm font-semibold">Shop</h6>
         <ul class="flex flex-col md:items-start items-center md:justify-start justify-center gap-1.5 uppercase text-xs">
-          <li><a href="#" class="">Best Sellers</a></li>
-          <li><a href="#" class="">Specialty Coffee</a></li>
-          <li><a href="#" class="">Agglomerated Coffee</a></li>
-          <li><a href="#" class="">Gifting</a></li>
+          {% for link in linklists['footer-shop'].links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {% endfor %}
         </ul>
       </div>
 
       <div class="flex flex-col md:items-start items-center md:justify-start justify-center gap-6">
         <h6 class="uppercase text-sm font-semibold">Learn</h6>
         <ul class="flex flex-col md:items-start items-center md:justify-start justify-center gap-1.5 uppercase text-xs">
-          <li><a href="#" class="">About Coffee</a></li>
-          <li><a href="#" class="">Blends</a></li>
-          <li><a href="#" class="">Roastings</a></li>
+          {% for link in linklists['footer-learn'].links %}
+            <li>
+              <a href="{{ link.url }}">
+                {{ link.title }}
+              </a>
+            </li>
+          {% endfor %}
         </ul>
       </div>
 
       <div class="flex flex-col md:items-start items-center md:justify-start justify-center gap-6">
         <h6 class="uppercase text-sm font-semibold">Company</h6>
         <ul class="flex flex-col md:items-start items-center md:justify-start justify-center gap-1.5 uppercase text-xs">
-          <li><a href="#" class="">About Us</a></li>
-          <li><a href="#" class="">Contact</a></li>
-          <li><a href="#" class="">Guest Support</a></li>
+          {% for link in linklists['footer-company'].links %}
+            <li>
+              <a href="{{ link.url }}">
+                {{ link.title }}
+              </a>
+            </li>
+          {% endfor %}
         </ul>
       </div>
 
       <div class="flex flex-col md:items-start items-center md:justify-start justify-center gap-6">
         <h6 class="uppercase  text-sm font-semibold">Legal</h6>
         <ul class="flex flex-col md:items-start items-center md:justify-start justify-center gap-1.5 uppercase text-xs">
-          <li><a href="#" class="">Shipping Policy</a></li>
-          <li><a href="#" class="">Refund and Return Policy</a></li>
-          <li><a href="#" class="">Terms and Conditions</a></li>
-          <li><a href="#" class="">Privacy Policy</a></li>
+          {% for link in linklists['footer-legal'].links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {% endfor %}
         </ul>
       </div>
     </div>
-
-    
   </div>
   <div class="md:border-t border-[#363636] font-inter tracking-tighter">
     <div class=" px-6 pt-4 pb-6 flex flex-col lg:flex-row justify-between items-center gap-2 text-[#444444]">

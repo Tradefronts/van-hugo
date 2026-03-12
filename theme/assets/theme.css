@@ -101,3 +101,33 @@ body {
 .marquee-content p {
   padding-right: 100%;
 }
+
+.shopify-policy__container {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 0 0 !important;
+}
+
+.shopify-policy__title {
+  text-align: center;
+  font-size: 25px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+}
+
+.shopify-policy__container .rte {
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.shopify-policy__container h1,
+.shopify-policy__container h2,
+.shopify-policy__container h3 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.shopify-policy__container p {
+  margin-bottom: 1rem;
+}
