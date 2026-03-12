@@ -1,9 +1,11 @@
-<div class="relative h-[120vh] w-full">
+<div class="relative min-h-screen w-full">
 
   {% if section.settings.background != blank %}
     <img
       src="{{ section.settings.background | image_url: width: 1500 }}"
-      class="w-full h-full object-cover"
+      {% comment %} class="w-full h-full object-cover" {% endcomment %}
+            class="absolute inset-0 w-full h-full object-cover"
+
       alt="Hero Image"
       height=""
       width=""
@@ -11,16 +13,18 @@
   {% else %}
     <img
       src="{{ 'hero-img.png' | asset_url }}"
-      class="w-full h-full object-cover"
+      {% comment %} class="w-full h-full object-cover" {% endcomment %}
+            class="absolute inset-0 w-full h-full object-cover"
+
       alt="Hero Image"
       width=""
       height=""
     >
   {% endif %}
 
-  <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center md:gap-2 gap-3 md:px-6 px-20 md:-translate-y-20 -translate-y-28">
+  <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center md:gap-2 gap-3 md:px-6 px-20 sm:mb-5 md:-translate-y-16 -translate-y-24">
 
-    <h1 class="text-4xl md:text-3xl playfair-display-100 tracking-tight font-extralight">
+    <h1 class="sm:text-4xl md:text-3xl text-2xl  playfair-display-100 tracking-tight font-extralight">
       {{ section.settings.heading }}
     </h1>
 

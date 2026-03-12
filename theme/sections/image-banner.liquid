@@ -1,13 +1,13 @@
 <div
-  class="relative w-full overflow-hidden"
-  style="height: {{ section.settings.section_height }}vh;"
+  class="relative w-full overflow-hidden min-h-screen"
+  {% comment %} style="height: {{ section.settings.section_height }}vh;" {% endcomment %}
 >
   <div class="absolute inset-0">
     {% if section.settings.background_image %}
       <img
         src="{{ section.settings.background_image | image_url: width: 2000 }}"
         alt="Banner image"
-        class="w-full h-full object-cover object-top md:object-fill"
+        class="w-full h-full object-cover object-top md:object-fill absolute inset-0"
         loading="lazy"
         height=""
         width=""
@@ -16,7 +16,7 @@
       <img
         src="{{ 'banner.png' | asset_url }}"
         alt="Banner image"
-        class="w-full h-full object-cover object-top md:object-fill"
+        class="w-full h-full object-cover object-top md:object-fill absolute inset-0"
         loading="lazy"
         height=""
         width=""
@@ -25,15 +25,9 @@
   </div>
   <div
     class="
-      relative z-10 h-full flex items-center
-      {% case section.settings.content_alignment %}
-        {% when 'left' %} justify-start text-left
-        {% when 'center' %} justify-center text-center
-        {% when 'right' %} justify-end text-right
-      {% endcase %}
-    "
+      absolute  z-10 h-full flex items-center left-1/2 -translate-x-1/2 "
   >
-    <div class="max-w-xl md:px-12 px-16   text-white font-inter  tracking-tighter ">
+    <div class="max-w-xl md:px-12 px-16   text-white font-inter  tracking-tighter flex flex-col items-center justify-center">
       {% if section.settings.subtext != blank %}
         <p class="text-xl mb-6 font-extralight">
           {{ section.settings.subtext }}

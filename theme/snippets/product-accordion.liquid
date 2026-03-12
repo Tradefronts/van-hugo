@@ -27,7 +27,7 @@
                         <img
                           src="{{ ingredients.image | image_url: width: 800 }}"
                           alt="Ingredients"
-                          class="h-full w-full "
+                          class="h-full w-full"
                           height=""
                           width=""
                         >
@@ -56,7 +56,7 @@
                 class="overflow-hidden transition-all duration-500 ease-in-out"
                 :style="active === 'shipping' ? 'max-height:' + $refs.shipping.scrollHeight + 'px; transform:translateY(0)' : 'max-height:0px; transform:translateY(-10px)'"
               >
-                <div class="pb-6 pt-2 text-xs uppercase tracking-tight">{{ shop.shipping_policy.body }}</div>
+                <div class="pb-6 pt-2 text-xs uppercase tracking-tight">{{ product.metafields.policies.shipping_policy }}</div>
               </div>
             </div>
 
@@ -76,7 +76,7 @@
                 class="overflow-hidden transition-all duration-500 ease-in-out"
                 :style="active === 'return' ? 'max-height:' + $refs.return.scrollHeight + 'px; transform:translateY(0)' : 'max-height:0px; transform:translateY(-10px)'"
               >
-                <div class="pb-6 pt-2 text-xs uppercase tracking-tight">{{ shop.refund_policy.body }}</div>
+                <div class="pb-6 pt-2 text-xs uppercase tracking-tight">{{ product.metafields.policies.refund_and_return_policy}}</div>
               </div>
             </div>
             <div class="border-t border-[#DADADA]">

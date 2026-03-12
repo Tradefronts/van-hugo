@@ -7,62 +7,59 @@
       <div class="grid grid-cols-2 border-t border-[#D7D7D7]">
         {% for product in recommendations.products %}
           <div class="relative border-b border-r border-[#00000040] flex flex-col ">
-            <div class="absolute md:top-0 right-0 bottom-0 ">
-              <button
-                onclick="openVariationDrawer('{{ product.handle }}')"
-                class="bg-black lg:h-14 lg:w-14 md:w-10 md:h-10 h-7 w-7 flex items-center justify-center md:p-1.5 p-2"
-                aria-label="Select options for {{ product.title }}"
-              >
-                <img src="{{ 'add-icon.svg' | asset_url }}" alt="Add" width="20" height="20">
-              </button>
-            </div>
+            <a href="{{ product.url }}">
+              <div class="absolute md:top-0 right-0 bottom-0 ">
+                <button
+                  onclick="event.preventDefault(); event.stopPropagation(); openVariationDrawer('{{ product.handle }}')"
 
-            <div class=" flex items-center justify-center lg:pb-20 md:pb-7 pb-5 lg:pt-36 pt-10 md:pt-20">
-              <a
-                href="{{ product.url }}"
-                class="block lg:h-96 lg:w-72 md:h-80 md:w-64 w-32 h-40"
-              >
-                {% if product.featured_image %}
-                  <img
-                    src="{{ product.featured_image | image_url: width: 600 }}"
-                    alt="{{ product.title }}"
-                    class="h-full w-full object-cover md:-translate-x-5 -translate-x-4"
-                    width="100"
-                    height="100"
-                  >
-                {% else %}
-                  {{ 'product-1' | placeholder_svg_tag: 'h-full w-full object-contain opacity-20' }}
-                {% endif %}
-              </a>
-            </div>
-
-            <div class="">
-              <div class="flex lg:flex-row flex-col items-center justify-between lg:px-14 md:px-8 pb-5  mt-auto">
-                <div class="flex flex-col lg:items-start lg:justify-start items-center justify-center">
-                  <a href="{{ product.url }}">
-                    <h3 class="uppercase lg:text-2xl text-sm font-semibold md:mb-1 leading-tight tracking-tighter">
-                      {{ product.title }}
-                    </h3>
-                  </a>
-                  <div>
-                    <span class="lg:text-sm text-xs tracking-tighter uppercase font-semibold lg:block hidden">
-                      {{ product.metafields.coffee.flavor }}
-                    </span>
-                    <span class="lg:text-sm text-[10px] tracking-tighter block md:text-[#7C7C7C] text-black uppercase font-medium">
-                      {{- product.metafields.coffee.bean -}}
-                    </span>
-                  </div>
-                </div>
-
-                <div class="md:text-lg text-[0.6rem] md:font-semibold font-medium mt-1 md:mt-0">
-                  {% if product.variants.size > 0 %}
-                    {% assign first_variant = product.variants.first %}
-                    <span class="tracking-tighter">₹{{ first_variant.price | divided_by: 100 | round }} | </span>
-                    <span class="text-[#7C7C7C] uppercase tracking-tighter">{{ first_variant.option1 }}</span>
+                  class="bg-black lg:h-14 lg:w-14 md:w-10 md:h-10 h-7 w-7 flex items-center justify-center md:p-1.5 p-2"
+                  aria-label="Select options for {{ product.title }}"
+                >
+                  <img src="{{ 'add-icon.svg' | asset_url }}" alt="Add" width="20" height="20">
+                </button>
+              </div>
+              <div class=" flex items-center justify-center lg:pb-20 md:pb-7 pb-5 lg:pt-36 pt-10 md:pt-20">
+                <div class="block lg:h-96 lg:w-72 md:h-80 md:w-64 w-32 h-40">
+                  {% if product.featured_image %}
+                    <img
+                      src="{{ product.featured_image | image_url: width: 600 }}"
+                      alt="{{ product.title }}"
+                      class="h-full w-full object-cover md:-translate-x-5 -translate-x-4"
+                      width="100"
+                      height="100"
+                    >
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'h-full w-full object-contain opacity-20' }}
                   {% endif %}
                 </div>
               </div>
-            </div>
+
+              <div class="">
+                <div class="flex lg:flex-row flex-col items-center justify-between lg:px-14 md:px-8 pb-5  mt-auto">
+                  <div class="flex flex-col lg:items-start lg:justify-start items-center justify-center">
+                    <h3 class="uppercase lg:text-2xl text-sm font-semibold md:mb-1 leading-tight tracking-tighter">
+                      {{ product.title }}
+                    </h3>
+                    <div>
+                      <span class="lg:text-sm text-xs tracking-tighter uppercase font-semibold lg:block hidden">
+                        {{ product.metafields.coffee.flavor }}
+                      </span>
+                      <span class="lg:text-sm text-[10px] tracking-tighter block md:text-[#7C7C7C] text-black uppercase font-medium">
+                        {{- product.metafields.coffee.bean -}}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="md:text-lg text-[0.6rem] md:font-semibold font-medium mt-1 md:mt-0">
+                    {% if product.variants.size > 0 %}
+                      {% assign first_variant = product.variants.first %}
+                      <span class="tracking-tighter">₹{{ first_variant.price | divided_by: 100 | round }} | </span>
+                      <span class="text-[#7C7C7C] uppercase tracking-tighter">{{ first_variant.option1 }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </a>
           </div>
         {% endfor %}
       </div>
