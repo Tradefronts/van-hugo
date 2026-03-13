@@ -15,7 +15,9 @@
         </h2>
       </div>
       <div id="rec-desktop" class="flex-1 overflow-y-auto no-scrollbar relative">
-        <div class="absolute inset-0 flex items-center justify-center text-sm text-gray-400 animate-pulse">Loading...</div>
+        <div class="absolute inset-0 flex items-center justify-center text-sm text-gray-400 animate-pulse">
+          Loading...
+        </div>
       </div>
     </div>
     <div class="w-full flex flex-col flex-1  overflow-hidden bg-white ">
@@ -38,15 +40,32 @@
             You May Also Like
           </p>
           <div id="rec-mobile" class="relative grid grid-cols-2">
-            <p class="absolute inset-0 flex items-center justify-center text-xs text-gray-400 animate-pulse">Loading...</p>
+            <p class="absolute inset-0 flex items-center justify-center text-xs text-gray-400 animate-pulse">
+              Loading...
+            </p>
           </div>
         </div>
       </div>
       <div class="border-t border-[#DFDFDF] flex-shrink-0 pb-7 pt-4 px-6">
-        <div class="flex justify-between text-[#777777] uppercase text-xs tracking-tighter mb-3">
-          <span class="block underline">Add order note</span>
-          <span>Including shipping &amp; taxes</span>
+        <div id="cart-note-container" class="mb-4 flex flex-col">
+          <textarea
+            id="cart-note"
+            name="note"
+            placeholder="Add instructions for your order"
+            class="w-full border border-[#DFDFDF] rounded p-2 text-xs resize-none mb-2 hidden"
+            rows="2"
+          ></textarea>
+          <div id="cart-note-label-wrapper" class="flex justify-between items-center">
+            <button
+              id="cart-note-toggle"
+              class="block underline cursor-pointer text-xs uppercase text-[#777777] tracking-tighter"
+            >
+              Add order note
+            </button>
+            <span class="text-[#777777] text-xs uppercase tracking-tighter"> Including shipping &amp; taxes </span>
+          </div>
         </div>
+
         <a
           href="/checkout"
           class="flex items-center justify-between w-full text-xs bg-black text-white rounded-lg py-3 px-7 font-semibold uppercase"
@@ -418,5 +437,35 @@
           }, 1200);
         });
     };
+
+    const noteToggleBtn = document.getElementById('cart-note-toggle');
+    const noteTextarea = document.getElementById('cart-note');
+
+    noteToggleBtn.addEventListener('click', function () {
+      noteTextarea.classList.toggle('hidden');
+
+      if (!noteTextarea.classList.contains('hidden')) {
+        noteTextarea.focus();
+        noteToggleBtn.textContent = 'Hide order note';
+      } else {
+        noteToggleBtn.textContent = 'Add order note';
+      }
+    });
+    const cartNote = document.getElementById('cart-note');
+    let noteTimer;
+    cartNote.addEventListener('input', function () {
+      clearTimeout(noteTimer);
+      noteTimer = setTimeout(function () {
+        fetch('/cart/update.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            note: cartNote.value,
+          }),
+        });
+      }, 800);
+    });
   })();
 </script>

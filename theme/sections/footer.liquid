@@ -30,7 +30,7 @@
               </li>
             {% endfor %}
           </ul>
-        {% elsif request.design_mode %}
+        {% else %}
           <h6 class="uppercase text-sm font-semibold">Menu</h6>
           <p class="text-xs text-gray-400 italic">Select a menu</p>
         {% endif %}
@@ -47,8 +47,8 @@
               </li>
             {% endfor %}
           </ul>
-{% else %}     
-       <h6 class="uppercase text-sm font-semibold">Menu</h6>
+        {% else %}
+          <h6 class="uppercase text-sm font-semibold">Menu</h6>
           <p class="text-xs text-gray-400 italic">Select a menu</p>
         {% endif %}
       </div>
@@ -64,7 +64,8 @@
               </li>
             {% endfor %}
           </ul>
-{% else %}          <h6 class="uppercase text-sm font-semibold">Menu</h6>
+        {% else %}
+          <h6 class="uppercase text-sm font-semibold">Menu</h6>
           <p class="text-xs text-gray-400 italic">Select a menu</p>
         {% endif %}
       </div>
@@ -80,7 +81,8 @@
               </li>
             {% endfor %}
           </ul>
-{% else %}          <h6 class="uppercase text-sm font-semibold">Menu</h6>
+        {% else %}
+          <h6 class="uppercase text-sm font-semibold">Menu</h6>
           <p class="text-xs text-gray-400 italic">Select a menu</p>
         {% endif %}
       </div>

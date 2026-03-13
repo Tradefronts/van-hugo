@@ -1,6 +1,5 @@
 <div
   class="relative w-full overflow-hidden min-h-screen"
-  {% comment %} style="height: {{ section.settings.section_height }}vh;" {% endcomment %}
 >
   <div class="absolute inset-0">
     {% if section.settings.background_image %}
@@ -25,9 +24,9 @@
   </div>
   <div
     class="
-      absolute  z-10 h-full flex items-center left-1/2 -translate-x-1/2 "
+      absolute  z-10 h-full flex items-center md:left-1/2 md:-translate-x-1/2 "
   >
-    <div class="max-w-xl md:px-12 px-16   text-white font-inter  tracking-tighter flex flex-col items-center justify-center">
+    <div class="max-w-xl md:px-12 px-10   text-white font-inter  tracking-tighter flex flex-col items-center justify-center">
       {% if section.settings.subtext != blank %}
         <p class="text-xl mb-6 font-extralight">
           {{ section.settings.subtext }}

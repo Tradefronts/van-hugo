@@ -15,6 +15,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
   </head>
 
+  <script>
+let resizeTimer;
+
+window.addEventListener("resize", () => {
+
+  document.body.classList.add("resize-animation-stopper");
+
+  clearTimeout(resizeTimer);
+
+  resizeTimer = setTimeout(() => {
+    document.body.classList.remove("resize-animation-stopper");
+  }, 400);
+
+});
+</script>
   <body class="">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
