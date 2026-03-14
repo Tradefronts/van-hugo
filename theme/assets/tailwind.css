@@ -2057,9 +2057,22 @@ video {
   cursor: not-allowed;
 }
 
+.disabled\:border-none:disabled {
+  border-style: none;
+}
+
+.disabled\:bg-black\/50:disabled {
+  background-color: rgb(0 0 0 / 0.5);
+}
+
 .disabled\:text-gray-300:disabled {
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity, 1));
+}
+
+.disabled\:text-white:disabled {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
 .disabled\:opacity-50:disabled {
