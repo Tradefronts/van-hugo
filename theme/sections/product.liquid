@@ -70,39 +70,102 @@
             </div>
           {% endunless %}
 
+          {% comment %}
+            {% unless product.has_only_default_variant %}
+              <div class="grind-size">
+                <p class="font-bold md:text-lg text-sm tracking-tight uppercase">Grind Size</p>
+                {% for option in product.options_with_values %}
+                  {% if option.name == 'Grind size' %}
+
+                    <div class="grid lg:grid-cols-4 sm:grid-cols-3 grid-cols-4 md:gap-3 gap-1 mt-4">
+                      {% for value in option.values %}
+                        <label class="cursor-pointer">
+                          <input
+                            type="radio"
+                            name="options[{{ option.name }}]"
+                            value="{{ value }}"
+                            class="hidden peer"
+                            {% if option.selected_value == value %}
+                              checked
+                            {% endif %}
+                          >
+                          <div class="flex items-center justify-center rounded-md border-2 border-transparent font-medium peer-checked:border-black peer-checked:font-semibold transition md:h-20 h-12">
+                            <p class="uppercase md:text-sm text-[0.6rem] text-center leading-tight">
+                              {% assign words = value | split: ' ' %}
+                              {% for word in words %}
+                                {{ word -}}
+                                <br>
+                              {% endfor %}
+                            <pre></pre>
+                            </p>
+                          </div>
+                        </label>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% endunless %}
+          {% endcomment %}
+
           {% unless product.has_only_default_variant %}
-            <div class="grind-size">
-              <p class="font-bold md:text-lg text-sm tracking-tight uppercase">Grind Size</p>
-              {% for option in product.options_with_values %}
-                {% if option.name == 'Grind size' %}
-                  <div class="grid lg:grid-cols-4 sm:grid-cols-3 grid-cols-4 md:gap-3 gap-1 mt-4">
-                    {% for value in option.values %}
-                      <label class="cursor-pointer">
-                        <input
-                          type="radio"
-                          name="options[{{ option.name }}]"
-                          value="{{ value }}"
-                          class="hidden peer"
-                          {% if option.selected_value == value %}
-                            checked
-                          {% endif %}
-                        >
-                        <div class="flex items-center justify-center rounded-md border-2 border-transparent font-medium peer-checked:border-black peer-checked:font-semibold transition md:h-20 h-12">
-                          <p class="uppercase md:text-sm text-[0.6rem] text-center leading-tight">
-                            {% assign words = value | split: ' ' %}
-                            {% for word in words %}
-                              {{ word -}}
-                              <br>
-                            {% endfor %}
-                          </p>
-                        </div>
-                      </label>
-                    {% endfor %}
-                  </div>
+  <div class="grind-size">
+    <p class="font-bold md:text-lg text-sm tracking-tight uppercase">Grind Size</p>
+    {% for option in product.options_with_values %}
+      {% if option.name == 'Grind size' %}
+        <div class="grid lg:grid-cols-4 sm:grid-cols-3 grid-cols-4 md:gap-7 gap-5 mt-4">
+          {% for value in option.values %}
+            
+            {% comment %} 1. FETCH DYNAMIC ICON {% endcomment %}
+            {% assign matched_icon = blank %}
+            {% for entry in product.metafields.coffee.grind_size.value %}
+              {% if entry.name == value %}
+                {% assign matched_icon = entry.icon %}
+              {% endif %}
+            {% endfor %}
+
+            <label class="cursor-pointer group flex flex-col items-center">
+              <input
+                type="radio"
+                name="options[{{ option.name }}]"
+                value="{{ value }}"
+                class="hidden peer"
+                {% if option.selected_value == value %}checked{% endif %}
+              >
+              
+              {% comment %} IMAGE BOX: Border only shows here when active {% endcomment %}
+              <div class="flex items-center justify-center rounded-xl border-2 border-transparent transition-all md:w-24 md:h-24 w-16 h-16  peer-checked:border-black peer-checked:bg-gray-50">
+                {% if matched_icon != blank %}
+                  <img
+                    src="{{ matched_icon | image_url: width: 200 }}"
+                    alt="{{ value }}"
+                    class="md:w-20 w-12 md:h-20 h-12 object-cover"
+                    height=""
+                    width=""
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="text-[8px] text-gray-400 uppercase">No Icon</div>
                 {% endif %}
-              {% endfor %}
-            </div>
-          {% endunless %}
+              </div>
+
+              {% comment %} 
+                TEXT: Outside the box. 
+                - 'font-medium' is the base weight.
+                - 'peer-checked:font-bold' makes it bold when selected.
+              {% endcomment %}
+              <p class="uppercase md:text-sm text-[0.6rem] leading-tight tracking-tighter mt-2 text-center break-words font-medium peer-checked:font-bold">
+                {{ value | replace: ' ', '<br>' }}
+              </p>
+            </label>
+
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endunless %}
+
           <div class="space-y-2">
             {% assign variant = product.selected_or_first_available_variant %}
             <div id="price-wrapper" class="flex items-center gap-3 mb-4">
